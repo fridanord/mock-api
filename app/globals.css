@@ -1,10 +1,26 @@
 @import "tailwindcss";
 
+/* =========================
+   Base color tokens
+   ========================= */
 :root {
+  /* existing semantic colors */
   --background: #ffffff;
   --foreground: #171717;
+
+  /* app design tokens (LIGHT) */
+  --app: 245 246 248;          /* page background */
+  --surface: 255 255 255;      /* cards */
+  --surface-2: 248 250 252;    /* subtle panels */
+  --text: 17 24 39;            /* primary text */
+  --muted: 107 114 128;        /* secondary text */
+  --border: 226 232 240;       /* borders */
+
+  --brand: 17 24 39;           /* primary button */
+  --brand-contrast: 255 255 255;
 }
 
+/* Tailwind inline theme bridge */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -12,13 +28,30 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* =========================
+   Dark mode
+   ========================= */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    /* app design tokens (DARK) */
+    --app: 10 10 10;
+    --surface: 17 17 17;
+    --surface-2: 24 24 27;
+    --text: 237 237 237;
+    --muted: 163 163 163;
+    --border: 63 63 70;
+
+    --brand: 237 237 237;
+    --brand-contrast: 17 17 17;
   }
 }
 
+/* =========================
+   Base styles
+   ========================= */
 body {
   background: var(--background);
   color: var(--foreground);
