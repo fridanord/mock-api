@@ -6,17 +6,22 @@ type Tab = "START" | "PROJECTS" | "ENDPOINTS" | "SCENARIO";
 
 const tabs: Tab[] = ["START", "PROJECTS", "ENDPOINTS", "SCENARIO"];
 
+type LayoutAccordionProps = {
+    children?: React.ReactNode;
+};
+
 // Placeholder content for each tab
 // Just import your actual components here
-const tabContent: Record<Tab, React.ReactNode> = {
-    START: <div className="p-8 text-white">Start Content</div>,
+const tabContent = (children?: React.ReactNode): Record<Tab, React.ReactNode> => ({
+    START: children ?? <div className="p-8 text-white">Start Content</div>,
     PROJECTS: <div className="p-8 text-white">Projects Content</div>,
     ENDPOINTS: <div className="p-8 text-white">Endpoints Content</div>,
     SCENARIO: <div className="p-8 text-white">Scenario Content</div>,
-};
+});
 
-export default function LayoutAccordion() {
+export default function LayoutAccordion({ children }: LayoutAccordionProps) {
     const [openTab, setOpenTab] = useState<Tab>("START");
+    const content = tabContent(children);
 
     return (
         // Full viewport; change to h-full if PARENT controls HEIGHT
@@ -44,7 +49,7 @@ export default function LayoutAccordion() {
                         {isActive && (
                             <div className="flex-1 h-full">
                                 <div className="w-full h-full bg-[#111] border-l border-neutral-500">
-                                    {tabContent[tab]}
+                                    {content[tab]}
                                 </div>
                             </div>
                         )}

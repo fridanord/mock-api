@@ -5,7 +5,7 @@ import { useState } from "react";
 
 type Mode = "login" | "register";
 type AuthFormValues = { mode: Mode; email: string; password: string };
-type LogRegComponentProps = { mode: Mode; onSubmit: (values: AuthFormValues) => void };
+type LogRegComponentProps = { mode: Mode; onSubmit?: (values: AuthFormValues) => void };
 
 export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps) {
     const isLogin = mode === "login";
@@ -31,10 +31,10 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">
                 <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
 
-                <div className="mt-4 rounded-xl bg-gray-100 p-1">
+                <div className="mt-4 rounded-xl bg-gray-100 p-1 ">
                     <div className="grid grid-cols-2 gap-1">
                         <Link
-                            href="/login"
+                            href="/start/login"
                             aria-current={isLogin ? "page" : undefined}
                             className={[
                                 "rounded-lg px-3 py-2 text-center text-sm font-medium",
@@ -45,7 +45,7 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
                         </Link>
 
                         <Link
-                            href="/register"
+                            href="/start/register"
                             aria-current={!isLogin ? "page" : undefined}
                             className={[
                                 "rounded-lg px-3 py-2 text-center text-sm font-medium",
@@ -57,7 +57,7 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
                     </div>
                 </div>
 
-                <form className="mt-6 space-y-4">
+                <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                     <div className="space-y-1">
                         <label className="text-sm font-medium text-gray-700">Email</label>
                         <input

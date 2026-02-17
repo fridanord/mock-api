@@ -1,11 +1,13 @@
 "use client";
 
-import { useSelectedLayoutSegment } from "next/navigation";
-import LogRegComponent from "../components/LogRegComponent";
+import LogRegComponent from "../Components/LogRegComponent";
 
-export default function AuthShell() {
-    const segment = useSelectedLayoutSegment(); // "login" | "register" | null
-    const mode = segment === "register" ? "register" : "login";
+type Mode = "login" | "register";
 
-    return <LogRegComponent mode={mode} onSubmit={ } />;
+export default function AuthShell({ mode }: { mode: Mode }) {
+    return (
+        <main className="min-h-screen flex items-center justify-center px-4">
+            <LogRegComponent mode={mode} />
+        </main>
+    );
 }
