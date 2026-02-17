@@ -31,14 +31,24 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">
                 <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
 
-                <div className="mt-4 rounded-xl bg-gray-100 p-1 ">
-                    <div className="grid grid-cols-2 gap-1">
+                <div className="mt-4 rounded-xl bg-gray-100 p-1">
+                    <div className="relative grid grid-cols-2 gap-1">
+                        <span
+                            aria-hidden="true"
+                            className={[
+                                "pointer-events-none absolute inset-y-0 left-0 z-0 w-1/2 rounded-lg bg-white shadow-sm",
+                                "transform transition-transform duration-300 ease-out",
+                                isLogin ? "translate-x-0" : "translate-x-full",
+                            ].join(" ")}
+                        />
+
                         <Link
                             href="/start/login"
                             aria-current={isLogin ? "page" : undefined}
                             className={[
-                                "rounded-lg px-3 py-2 text-center text-sm font-medium",
-                                isLogin ? "bg-white text-gray-900 shadow-sm" : "text-gray-600",
+                                "relative z-10 rounded-lg px-3 py-2 text-center text-sm font-medium",
+                                "transition-colors transition-discrete duration-300",
+                                isLogin ? "text-gray-900" : "text-gray-600",
                             ].join(" ")}
                         >
                             Logga in
@@ -48,8 +58,9 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
                             href="/start/register"
                             aria-current={!isLogin ? "page" : undefined}
                             className={[
-                                "rounded-lg px-3 py-2 text-center text-sm font-medium",
-                                !isLogin ? "bg-white text-gray-900 shadow-sm" : "text-gray-600",
+                                "relative z-10 rounded-lg px-3 py-2 text-center text-sm font-medium",
+                                "transition-colors transition-discrete duration-300",
+                                !isLogin ? "text-gray-900" : "text-gray-600",
                             ].join(" ")}
                         >
                             Skapa konto

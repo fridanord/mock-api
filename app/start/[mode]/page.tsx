@@ -1,7 +1,4 @@
 import { notFound } from "next/navigation";
-import AuthShell from "../../(auth)/AuthShell";
-
-type Mode = "login" | "register";
 
 export default async function StartModePage({
     params,
@@ -14,5 +11,5 @@ export default async function StartModePage({
         notFound();
     }
 
-    return <AuthShell mode={mode as Mode} />;
+    return null;
 }
