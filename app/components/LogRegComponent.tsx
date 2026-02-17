@@ -70,7 +70,7 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
                             placeholder="student@example.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-300"
+                            className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-300 text-neutral-800"
                         />
                     </div>
 
@@ -85,7 +85,7 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
                             placeholder="password123"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-300"
+                            className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-300 text-neutral-800"
                         />
                     </div>
 
