@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
+
+
 
 :root {
   --background: #F3F4F6; /* Athens Gray (96) */
@@ -61,6 +64,9 @@
   --line-height-h2: 2rem;
   --line-height-h3: 1.5rem;
   --line-height-base: 1.25rem;
+
+  --color-button-primary: var(--color-azure-11);
+  --color-button-hover: var(--color-azure-17);
 
 }
 
