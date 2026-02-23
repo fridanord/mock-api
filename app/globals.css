@@ -46,8 +46,8 @@
   --radius-card: 12px;
   --radius-input: 8px;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui;
-  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace;
+  --font-sans: Inter, ui-sans-serif, system-ui;
+  --font-mono: JetBrains Mono, ui-monospace, monospace;
 
   --font-weight-bold: 700;
   --font-weight-medium: 500;
