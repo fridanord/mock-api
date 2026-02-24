@@ -5,6 +5,8 @@ import LogRegComponent from "../Components/LogRegComponent";
 
 type Mode = "login" | "register";
 
+// [mode] i mappstrukter är ett dynamiskt segment 
+// Mode sätts baserat på den valda segmenten i URL:en, om segmentet är "register" så är mode "register", annars är det "login". Detta används för att visa rätt innehåll i LogRegComponent beroende på vilken flik användaren är på.
 export default function AuthShell() {
     const segment = useSelectedLayoutSegment();
     const mode: Mode = segment === "register" ? "register" : "login";
