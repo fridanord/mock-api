@@ -41,7 +41,7 @@ export default function StartLayout({ children }: { children: React.ReactNode })
 
 // REMINDER:
 
-// With your current Solution B, the Projects tab content is not driven by routing. It’s just whatever you pass into projects={...}.
+// With current solution, the Projects tab content is not driven by routing. It’s just whatever you pass into projects={...}.
 
 // So if you want “Projects tab shows /start/projects page content”, you’d typically refactor so:
 
