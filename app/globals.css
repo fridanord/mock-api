@@ -8,7 +8,7 @@
   --foreground: #111827; /* Azure (11) */
 }
 
-@theme inline {
+@theme inline { /* Här bor våra "rötter" */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -79,7 +79,11 @@
   }
 } */
 
-@layer base {
+/* @layer base används för att sätta standardutseende för alla html taggar,
+   Här bestämmer vi vad som skall gälla för ALLA rubriker, stycken och knappar
+   som inte har en specifik klass. Detta skapar en konsekvent grundstil */
+
+@layer base { 
 
   body {
     background: var(--background);
@@ -115,6 +119,11 @@
   }
 }
 
+/* @layer components kan vi specifiera komponent design för bättre läsbarhet och mindre kod,
+   våra egna "design system" - klasser.
+   Gör att vi slipper skriva långa tailwind-klasser varje gång
+   och vi får ett enhetligt utseende på hela sajten */
+
 @layer components { 
 
   .btn-primary {
@@ -123,6 +132,26 @@
 
   .btn-secondary {
     @apply bg-white border border-grey-91 text-azure-27 rounded-card px-6 py-2.5 font-medium transition-colors hover:bg-grey-98 flex items-center gap-2;
+  }
+
+  .input-base {
+    @apply rounded-input border border-grey-91 p-2 bg-grey-98 outline-none focus:border-blue-59 transition-all;
+  }
+
+  .info-box {
+    @apply rounded-card bg-grey-97 p-4 flex items-center gap-3 border border-grey-91 text-blue-59;
+  }
+
+  .status-badge { 
+    @apply px-3 py-1 rounded-full text-xs font-mono font-medium;
+  }
+
+  .status-valid {
+    @apply bg-grey-97 text-valid;
+  }
+
+  .status-invalid {
+    @apply bg-red-100 text-invalid;
   }
 
 }
