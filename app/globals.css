@@ -69,6 +69,9 @@
   --color-button-primary: var(--color-azure-11);
   --color-button-hover: var(--color-azure-17);
 
+  --color-valid: var(--color-green-36);
+  --color-invalid: var(--color-red-60);
+
 }
 
 /*
@@ -147,11 +150,13 @@
   }
 
   .status-valid {
-    @apply bg-grey-97 text-valid;
+    @apply bg-grey-97;
+    color: var(--color-valid);
   }
 
   .status-invalid {
-    @apply bg-red-100 text-invalid;
+    @apply bg-red-100;
+    color: var(--color-invalid);
   }
 
 }
