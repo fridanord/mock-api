@@ -114,3 +114,15 @@
     font-weight: var(--font-weight-normal);
   }
 }
+
+@layer components { 
+
+  .btn-primary {
+    @apply bg-azure-11 text-white rounded-card px-6 py-2.5 font-medium transition-colors hover:bg-azure-17 flex items-center gap-2;
+  }
+
+  .btn-secondary {
+    @apply bg-white border border-grey-91 text-azure-27 rounded-card px-6 py-2.5 font-medium transition-colors hover:bg-grey-98 flex items-center gap-2;
+  }
+
+}
