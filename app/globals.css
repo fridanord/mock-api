@@ -159,4 +159,28 @@
     color: var(--color-invalid);
   }
 
+  .card-base {
+    @apply bg-white rounded-card border border-grey-91 shadow-sm overflow-hidden;
+  }
+
+  .card-footer {
+    @apply bg-grey-98 border-t border-grey-91 p-3 text-center text-[10px] font-bold uppercase tracking-wider text-azure-65;
+  }
+
+  .method-badge {
+    @apply px-1.5 py-0.5 rounded text-[10px] font-bold uppercase;
+  }
+
+  .method-get { 
+    @apply bg-blue-89 text-blue-34;
+  }
+
+  .btn-delete {
+    @apply bg-red-60 text-white rounded-input p-2 hover:bg-red-51 transition-colors flex items-center justify-center;
+  }
+
+  .btn-ghost {
+    @apply flex items-center gap-2 text-azure-34 font-medium hover:text-azure-11 transition-colors text-sm;
+  }
+
 }
