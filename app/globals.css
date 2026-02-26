@@ -189,7 +189,7 @@
   }
 
   .method-dark {
-    @apply bg-azure-11 text-shite px-2 py-0.5 rounded text-[10px] font-bold uppercase;
+    @apply bg-azure-11 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase;
   }
 
   .badge-get { @apply bg-blue-89 text-blue-34; }
