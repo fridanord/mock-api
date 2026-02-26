@@ -1,26 +1,202 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
+
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F3F4F6; /* Athens Gray (96) */
+  --foreground: #111827; /* Azure (11) */
 }
 
-@theme inline {
+@theme inline { /* Här bor våra "rötter" */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* GREY */
+  --color-grey-96: #F3F4F6;
+  --color-grey-91: #E5E7EB;
+  --color-grey-98: #F9FAFB;
+  --color-grey-46: #6B7280;
+  --color-grey-97: #EEF2FF;
+  --color-grey-93: #DCFCE7;
+
+  /* AZURE / EBONY */
+  --color-azure-11: #111827;
+  --color-azure-65: #9CA3AF;
+  --color-azure-34: #4B5563;
+  --color-azure-27: #374151;
+  --color-azure-17: #1F2937;
+  --color-azure-84: #D1D5DB;
+
+  /* BLUE */
+  --color-blue-67: #6366F1;
+  --color-blue-59: #4F46E5;
+  --color-blue-34: #312E81;
+  --color-blue-89: #C7D2FE;
+
+  /* STATUS & ACCENTS */
+  --color-red-60: #EF4444;
+  --color-red-51: #DC2626;
+  --color-green-36: #16A34A;
+  --color-yellow-89: #FEF3C7;
+  --color-orange-44: #D97706;
+  --color-violet-65: #A855F7;
+
+  /* DESIGN TOKENS */
+  --radius-button: 14px;
+  --radius-card: 12px;
+  --radius-input: 8px;
+
+  --font-sans: Inter, ui-sans-serif, system-ui;
+  --font-mono: JetBrains Mono, ui-monospace, monospace;
+
+  --font-weight-bold: 700;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-normal: 400;
+
+  --font-size-h1: 1.875rem;
+  --font-size-h2: 1.5rem;
+  --font-size-h3: 1rem;
+  --font-size-base: 0.875rem;
+  --font-size-small: 0.8125rem;
+
+  --line-height-h1: 2.25rem;
+  --line-height-h2: 2rem;
+  --line-height-h3: 1.5rem;
+  --line-height-base: 1.25rem;
+
+  --color-button-primary: var(--color-azure-11);
+  --color-button-hover: var(--color-azure-17);
+
+  --color-valid: var(--color-green-36);
+  --color-invalid: var(--color-red-60);
+
 }
 
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+} */
+
+/* @layer base används för att sätta standardutseende för alla html taggar,
+   Här bestämmer vi vad som skall gälla för ALLA rubriker, stycken och knappar
+   som inte har en specifik klass. Detta skapar en konsekvent grundstil */
+
+@layer base { 
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-normal);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+  }
+
+  h1 {
+    font-size: var(--font-size-h1);
+    line-height: var(--line-height-h1);
+    font-weight: var(--font-weight-bold);
+  }
+
+  h2 {
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-h2);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  h3 {
+    font-size: var(--font-size-h3);
+    line-height: var(--line-height-h3);
+    font-weight: var(--font-weight-medium);
+  }
+
+  p, input, button, textarea {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    font-weight: var(--font-weight-normal);
+  }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* @layer components kan vi specifiera komponent design för bättre läsbarhet och mindre kod,
+   våra egna "design system" - klasser.
+   Gör att vi slipper skriva långa tailwind-klasser varje gång
+   och vi får ett enhetligt utseende på hela sajten */
+
+@layer components { 
+
+  .btn-primary {
+    @apply bg-azure-11 text-white rounded-card px-6 py-2.5 font-medium transition-colors hover:bg-azure-17 flex items-center gap-2;
+  }
+
+  .btn-secondary {
+    @apply bg-white border border-grey-91 text-azure-27 rounded-card px-6 py-2.5 font-medium transition-colors hover:bg-grey-98 flex items-center gap-2;
+  }
+
+  .btn-delete {
+    @apply bg-red-60 text-white rounded-input p-2 hover:bg-red-51 transition-colors flex items-center justify-center;
+  }
+
+  .btn-ghost {
+    @apply flex items-center gap-2 text-azure-34 font-medium hover:text-azure-11 transition-colors text-sm;
+  }
+
+  .btn-edit {
+    @apply bg-white border border-grey-91 text-azure-27 rounded-input px-3 py-1 text-xs font-medium hover:bg-grey-98;
+  }
+
+
+  .btn-test {
+    @apply bg-azure-11 text-white rounded-input px-3 py-1 text-xs font-medium flex items-center gap-1.5 hover:bg-azure-17;
+  }
+
+  .card-base {
+    @apply bg-white rounded-card border border-grey-91 shadow-sm overflow-hidden;
+  }
+
+  .card-footer {
+    @apply bg-grey-98 border-t border-grey-91 p-3 text-center text-[10px] font-bold uppercase tracking-wider text-azure-65;
+  }
+
+  .input-base {
+    @apply rounded-input border border-grey-91 p-2 bg-grey-98 outline-none focus:border-blue-59 transition-all;
+  }
+
+  .info-box {
+    @apply rounded-card bg-grey-97 p-4 flex items-center gap-3 border border-grey-91 text-blue-59;
+  }
+
+  .status-badge { 
+    @apply px-3 py-1 rounded-full text-xs font-mono font-medium;
+  }
+
+  .status-valid {
+    @apply bg-grey-97;
+    color: var(--color-valid);
+  }
+
+  .status-invalid {
+    @apply bg-red-100;
+    color: var(--color-invalid);
+  }
+
+  .method-badge {
+    @apply px-1.5 py-0.5 rounded text-[10px] font-bold uppercase;
+  }
+
+  .method-dark {
+    @apply bg-azure-11 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase;
+  }
+
+  .badge-get { @apply bg-blue-89 text-blue-34; }
+  .badge-post { @apply bg-grey-93 text-green-36; }
+  .badge-put { @apply bg-yellow-89 text-orange-44; }
+  .list-badge {
+    @apply bg-white border border-grey-91 text-azure-65 px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1;
+  }
+
 }
