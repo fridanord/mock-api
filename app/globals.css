@@ -137,6 +137,31 @@
     @apply bg-white border border-grey-91 text-azure-27 rounded-card px-6 py-2.5 font-medium transition-colors hover:bg-grey-98 flex items-center gap-2;
   }
 
+  .btn-delete {
+    @apply bg-red-60 text-white rounded-input p-2 hover:bg-red-51 transition-colors flex items-center justify-center;
+  }
+
+  .btn-ghost {
+    @apply flex items-center gap-2 text-azure-34 font-medium hover:text-azure-11 transition-colors text-sm;
+  }
+
+  .btn-edit {
+    @apply bg-white border border-grey-91 text-azure-27 rounded-input px-3 py-1 text-xs font-medium hover:bg-grey-98;
+  }
+
+
+  .btn-test {
+    @apply bg-azure-11 text-white rounded-input px-3 py-1 text-xs font-medium flex items-center gap-1.5 hover:bg-azure-17;
+  }
+
+  .card-base {
+    @apply bg-white rounded-card border border-grey-91 shadow-sm overflow-hidden;
+  }
+
+  .card-footer {
+    @apply bg-grey-98 border-t border-grey-91 p-3 text-center text-[10px] font-bold uppercase tracking-wider text-azure-65;
+  }
+
   .input-base {
     @apply rounded-input border border-grey-91 p-2 bg-grey-98 outline-none focus:border-blue-59 transition-all;
   }
@@ -159,28 +184,19 @@
     color: var(--color-invalid);
   }
 
-  .card-base {
-    @apply bg-white rounded-card border border-grey-91 shadow-sm overflow-hidden;
-  }
-
-  .card-footer {
-    @apply bg-grey-98 border-t border-grey-91 p-3 text-center text-[10px] font-bold uppercase tracking-wider text-azure-65;
-  }
-
   .method-badge {
     @apply px-1.5 py-0.5 rounded text-[10px] font-bold uppercase;
   }
 
-  .method-get { 
-    @apply bg-blue-89 text-blue-34;
+  .method-dark {
+    @apply bg-azure-11 text-shite px-2 py-0.5 rounded text-[10px] font-bold uppercase;
   }
 
-  .btn-delete {
-    @apply bg-red-60 text-white rounded-input p-2 hover:bg-red-51 transition-colors flex items-center justify-center;
-  }
-
-  .btn-ghost {
-    @apply flex items-center gap-2 text-azure-34 font-medium hover:text-azure-11 transition-colors text-sm;
+  .badge-get { @apply bg-blue-89 text-blue-34; }
+  .badge-post { @apply bg-grey-93 text-green-36; }
+  .badge-put { @apply bg-yellow-89 text-orange-44; }
+  .list-badge {
+    @apply bg-white border border-grey-91 text-azure-65 px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1;
   }
 
 }
