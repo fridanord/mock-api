@@ -1,5 +1,11 @@
 import AuthShell from "../(auth)/AuthShell";
+import EndpointListContainer from "../Components/EndpointListContainer";
 import LayoutAccordion from "../Components/LayoutAccordion";
+import { FakeEndpoint } from "../Components/EndpointListContainer";
+
+const TestEndpoints: FakeEndpoint[] = [
+    { id: "6", method: "GET", path: "/TEST" }
+];
 
 // START LAYOUTET som används i alla sidor under /start, innehåller en accordion med AuthShell och barnen som är själva sidorna
 export default function StartLayout({ children }: { children: React.ReactNode }) {
@@ -13,7 +19,13 @@ export default function StartLayout({ children }: { children: React.ReactNode })
                 </>
             }
             projects={<div className="p-8 text-white">Projects UI goes here</div>}
-            endpoints={<div className="p-8 text-white">Endpoints UI goes here</div>}
+            endpoints={<div className="p-8 text-white">Endpoints UI goes here
+
+                <EndpointListContainer endpoints={TestEndpoints} />
+
+            </div>
+
+            }
             scenario={<div className="p-8 text-white">Scenario UI goes here</div>}
         />
     );
