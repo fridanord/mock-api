@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
-
-
 /* =========================
    Base color tokens
    ========================= */
@@ -11,6 +9,12 @@
   --foreground: #111827; /* Azure (11) */
 }
 
+/*
+  NOTE:
+  If your setup complains about "Unknown at rule @theme",
+  replace `@theme inline { ... }` with `:root { ... }`
+  and keep the variables the same.
+*/
 @theme inline { /* Här bor våra "rötter" */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -51,7 +55,7 @@
   --radius-input: 8px;
 
   --font-sans: Inter, ui-sans-serif, system-ui;
-  --font-mono: JetBrains Mono, ui-monospace, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   --font-weight-bold: 700;
   --font-weight-medium: 500;
@@ -74,16 +78,14 @@
 
   --color-valid: var(--color-green-36);
   --color-invalid: var(--color-red-60);
-
 }
 
-/*
+/* DARK MODE (disabled)
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
 
-    /* app design tokens (DARK) */
     --app: 10 10 10;
     --surface: 17 17 17;
     --surface-2: 24 24 27;
@@ -94,14 +96,14 @@
     --brand: 237 237 237;
     --brand-contrast: 17 17 17;
   }
-} */
+}
+*/
 
 /* @layer base används för att sätta standardutseende för alla html taggar,
    Här bestämmer vi vad som skall gälla för ALLA rubriker, stycken och knappar
    som inte har en specifik klass. Detta skapar en konsekvent grundstil */
 
-@layer base { 
-
+@layer base {
   body {
     background: var(--background);
     color: var(--foreground);
@@ -129,7 +131,10 @@
     font-weight: var(--font-weight-medium);
   }
 
-  p, input, button, textarea {
+  p,
+  input,
+  button,
+  textarea {
     font-size: var(--font-size-base);
     line-height: var(--line-height-base);
     font-weight: var(--font-weight-normal);
@@ -141,8 +146,7 @@
    Gör att vi slipper skriva långa tailwind-klasser varje gång
    och vi får ett enhetligt utseende på hela sajten */
 
-@layer components { 
-
+@layer components {
   .btn-primary {
     @apply bg-azure-11 text-white rounded-card px-6 py-2.5 font-medium transition-colors hover:bg-azure-17 flex items-center gap-2;
   }
@@ -162,7 +166,6 @@
   .btn-edit {
     @apply bg-white border border-grey-91 text-azure-27 rounded-input px-3 py-1 text-xs font-medium hover:bg-grey-98;
   }
-
 
   .btn-test {
     @apply bg-azure-11 text-white rounded-input px-3 py-1 text-xs font-medium flex items-center gap-1.5 hover:bg-azure-17;
@@ -184,7 +187,7 @@
     @apply rounded-card bg-grey-97 p-4 flex items-center gap-3 border border-grey-91 text-blue-59;
   }
 
-  .status-badge { 
+  .status-badge {
     @apply px-3 py-1 rounded-full text-xs font-mono font-medium;
   }
 
@@ -206,11 +209,17 @@
     @apply bg-azure-11 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase;
   }
 
-  .badge-get { @apply bg-blue-89 text-blue-34; }
-  .badge-post { @apply bg-grey-93 text-green-36; }
-  .badge-put { @apply bg-yellow-89 text-orange-44; }
+  .badge-get {
+    @apply bg-blue-89 text-blue-34;
+  }
+  .badge-post {
+    @apply bg-grey-93 text-green-36;
+  }
+  .badge-put {
+    @apply bg-yellow-89 text-orange-44;
+  }
+
   .list-badge {
     @apply bg-white border border-grey-91 text-azure-65 px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1;
   }
-
 }
