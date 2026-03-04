@@ -1,22 +1,25 @@
-import AuthShell from "../(auth)/AuthShell";
-import LayoutAccordion from "../Components/LayoutAccordion";
+"use client";
 
-// START LAYOUTET som används i alla sidor under /start, innehåller en accordion med AuthShell och barnen som är själva sidorna
+import LayoutAccordion from "../Components/LayoutAccordion";
+import AuthShell from "../(auth)/AuthShell";
+import { useSelectedLayoutSegment } from "next/navigation";
+
 export default function StartLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <LayoutAccordion
-            start={
-                <>
-                    <AuthShell />
-                    {children}
-                    {/* Här renderas själva innehållet i /start/login eller /start/register beroende på vilken flik som är aktiv, och AuthShell hanterar logiken för att visa rätt innehåll baserat på URL:en */}
-                </>
-            }
-            projects={<div className="p-8 text-white">Projects UI goes here</div>}
-            endpoints={<div className="p-8 text-white">Endpoints UI goes here</div>}
-            scenario={<div className="p-8 text-white">Scenario UI goes here</div>}
-        />
-    );
+  const segment = useSelectedLayoutSegment(); // null på /start, "login"/"register" på /start/login osv
+  const isAuthMode = segment === "login" || segment === "register";
+
+  return (
+    <LayoutAccordion
+      start={
+        <>
+          {isAuthMode ? <AuthShell /> : children}
+        </>
+      }
+      projects={<div className="p-8 text-white">Projects UI goes here</div>}
+      endpoints={<div className="p-8 text-white">Endpoints UI goes here</div>}
+      scenario={<div className="p-8 text-white">Scenario UI goes here</div>}
+    />
+  );
 }
 // FÖRSLAG:
 // Förslag för hur struktur för projekts kanske borde se ut med layout för project, endpoints, och scenario,

@@ -1,7 +1,13 @@
-import { redirect } from "next/navigation";
+﻿import Hero from "../Components/Hero";
+import InfoSection from "../Components/InfoSection";
 
-
-// START SIDAN Redirectar till /start/login som är den första fliken i LayoutAccordion, detta kan ändras senare
 export default function StartPage() {
-    redirect("/start/login");
+  return (
+    <div className="h-full w-full overflow-y-auto p-8">
+      <div className="mx-auto max-w-5xl space-y-10">
+        <Hero />
+        <InfoSection />
+      </div>
+    </div>
+  );
 }

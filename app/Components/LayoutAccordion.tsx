@@ -1,47 +1,31 @@
 "use client";
 
 import React, { useState } from "react";
-import Hero from "../public/components/Hero";
-import InfoSection from "../public/components/InfoSection";
 
 type Tab = "START" | "PROJECTS" | "ENDPOINTS" | "SCENARIO";
 const tabs: Tab[] = ["START", "PROJECTS", "ENDPOINTS", "SCENARIO"];
 
 type LayoutAccordionProps = {
-    start?: React.ReactNode;
-    projects?: React.ReactNode;
-    endpoints?: React.ReactNode;
-    scenario?: React.ReactNode;
-};
-
-const tabContent: Record<Tab, React.ReactNode> = {
-  START: (
-    <div className="h-full w-full overflow-y-auto p-8">
-      <div className="mx-auto max-w-5xl space-y-10">
-        <Hero />
-        <InfoSection />
-      </div>
-    </div>
-  ),
-  PROJECTS: <div className="p-8 text-white">Projects Content</div>,
-  ENDPOINTS: <div className="p-8 text-white">Endpoints Content</div>,
-  SCENARIO: <div className="p-8 text-white">Scenario Content</div>,
+  start?: React.ReactNode;
+  projects?: React.ReactNode;
+  endpoints?: React.ReactNode;
+  scenario?: React.ReactNode;
 };
 
 export default function LayoutAccordion({
-    start,
-    projects,
-    endpoints,
-    scenario,
+  start,
+  projects,
+  endpoints,
+  scenario,
 }: LayoutAccordionProps) {
-    const [openTab, setOpenTab] = useState<Tab>("START");
+  const [openTab, setOpenTab] = useState<Tab>("START");
 
-    const content: Record<Tab, React.ReactNode> = {
-        START: start ?? <div className="p-8 text-white">Start Content</div>,
-        PROJECTS: projects ?? <div className="p-8 text-white">Projects Content</div>,
-        ENDPOINTS: endpoints ?? <div className="p-8 text-white">Endpoints Content</div>,
-        SCENARIO: scenario ?? <div className="p-8 text-white">Scenario Content</div>,
-    };
+  const content: Record<Tab, React.ReactNode> = {
+    START: start ?? <div className="p-8 text-white">Start Content</div>,
+    PROJECTS: projects ?? <div className="p-8 text-white">Projects Content</div>,
+    ENDPOINTS: endpoints ?? <div className="p-8 text-white">Endpoints Content</div>,
+    SCENARIO: scenario ?? <div className="p-8 text-white">Scenario Content</div>,
+  };
 
   return (
     <div className="flex h-screen w-full bg-[#222]">
@@ -65,19 +49,17 @@ export default function LayoutAccordion({
               </span>
             </button>
 
-                        {/* Tab content */}
-                        {isActive && (
-                            <div className="flex-1 h-full">
-                                <div className="w-full h-full bg-[#111] border-l border-neutral-500">
-                                    {content[tab]}
-                                </div>
-                            </div>
-                        )}
-                    </React.Fragment>
-                );
-            })}
-        </div>
-    );
+            {/* Tab content */}
+            {isActive && (
+              <div className="flex-1 h-full">
+                <div className="w-full h-full bg-[#111] border-l border-neutral-500">
+                  {content[tab]}
+                </div>
+              </div>
+            )}
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
 }
-
-

@@ -1,5 +1,5 @@
-import Hero from "./components/Hero";
-import InfoSection from "./components/InfoSection";
+import Hero from "../Components/Hero";
+import InfoSection from "../Components/InfoSection";
 
 export default function PublicLanding() {
   return (
