@@ -3,6 +3,9 @@
 
 
 
+/* =========================
+   Base color tokens
+   ========================= */
 :root {
   --background: #F3F4F6; /* Athens Gray (96) */
   --foreground: #111827; /* Azure (11) */
@@ -79,6 +82,17 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    /* app design tokens (DARK) */
+    --app: 10 10 10;
+    --surface: 17 17 17;
+    --surface-2: 24 24 27;
+    --text: 237 237 237;
+    --muted: 163 163 163;
+    --border: 63 63 70;
+
+    --brand: 237 237 237;
+    --brand-contrast: 17 17 17;
   }
 } */
 

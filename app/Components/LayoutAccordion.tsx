@@ -1,6 +1,8 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
+import Hero from "../public/components/Hero";
+import InfoSection from "../public/components/InfoSection";
 
 type Tab = "START" | "PROJECTS" | "ENDPOINTS" | "SCENARIO";
 const tabs: Tab[] = ["START", "PROJECTS", "ENDPOINTS", "SCENARIO"];
@@ -12,8 +14,19 @@ type LayoutAccordionProps = {
     scenario?: React.ReactNode;
 };
 
-// Placeholder content for each tab
-// Just import your actual components here
+const tabContent: Record<Tab, React.ReactNode> = {
+  START: (
+    <div className="h-full w-full overflow-y-auto p-8">
+      <div className="mx-auto max-w-5xl space-y-10">
+        <Hero />
+        <InfoSection />
+      </div>
+    </div>
+  ),
+  PROJECTS: <div className="p-8 text-white">Projects Content</div>,
+  ENDPOINTS: <div className="p-8 text-white">Endpoints Content</div>,
+  SCENARIO: <div className="p-8 text-white">Scenario Content</div>,
+};
 
 export default function LayoutAccordion({
     start,
@@ -30,27 +43,27 @@ export default function LayoutAccordion({
         SCENARIO: scenario ?? <div className="p-8 text-white">Scenario Content</div>,
     };
 
-    return (
-        // Full viewport; change to h-full if PARENT controls HEIGHT
-        <div className="flex h-screen w-full bg-[#222]">
-            {tabs.map((tab) => {
-                const isActive = tab === openTab;
+  return (
+    <div className="flex h-screen w-full bg-[#222]">
+      {tabs.map((tab) => {
+        const isActive = tab === openTab;
 
-                return (
-                    <React.Fragment key={tab}>
-                        {/* Tab strip */}
-                        <button
-                            onClick={() => setOpenTab(tab)}
-                            className={` relative h-full w-16 flex flex-col items-center justify-start pt-4 border-r border-gray-400 transition-colors
-                ${isActive
-                                    ? "bg-white text-black"
-                                    : "bg-gradient-to-b from-gray-200 to-gray-400 text-black"
-                                }`}
-                        >
-                            <span className="[writing-mode:vertical-rl] rotate-180 tracking-[0.25em] font-medium whitespace-nowrap py-4">
-                                {tab}
-                            </span>
-                        </button>
+        return (
+          <React.Fragment key={tab}>
+            {/* Tab strip */}
+            <button
+              onClick={() => setOpenTab(tab)}
+              className={`relative h-full w-16 flex flex-col items-center justify-start pt-4 border-r border-gray-400 transition-colors
+                ${
+                  isActive
+                    ? "bg-white text-black"
+                    : "bg-gradient-to-b from-gray-200 to-gray-400 text-black"
+                }`}
+            >
+              <span className="[writing-mode:vertical-rl] rotate-180 tracking-[0.25em] font-medium whitespace-nowrap py-4">
+                {tab}
+              </span>
+            </button>
 
                         {/* Tab content */}
                         {isActive && (
