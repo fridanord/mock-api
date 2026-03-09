@@ -66,10 +66,10 @@ function EndpointListItem({
     onTest,
     onDelete,
 }: {
-    endpoint: Endpoint;
-    onEdit?: (endpoint: Endpoint) => void;
-    onTest?: (endpoint: Endpoint) => void;
-    onDelete?: (endpoint: Endpoint) => void;
+    endpoint: FakeEndpoint;
+    onEdit?: (endpoint: FakeEndpoint) => void;
+    onTest?: (endpoint: FakeEndpoint) => void;
+    onDelete?: (endpoint: FakeEndpoint) => void;
 }) {
     return (
         <li className="flex items-center justify-between py-4">
