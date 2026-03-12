@@ -3,11 +3,12 @@ import LayoutAccordion from "../Components/LayoutAccordion";
 import Navbar from "../Components/Navbar";
 
 // START LAYOUTET som används i alla sidor under /start, innehåller en accordion med AuthShell och barnen som är själva sidorna
+// removed min-h-0 from the div flex 1
 export default function StartLayout({ children }: { children: React.ReactNode }) {
     return (
         <main className="min-h-screen flex flex-col">
             <Navbar />
-            <div className="flex-1 min-h-0">
+            <div className="flex-1">
 
                 <LayoutAccordion
                     start={
