@@ -32,7 +32,8 @@ export default function LayoutAccordion({
 
     return (
         // Full viewport; change to h-full if PARENT controls HEIGHT
-        <div className="flex h-screen w-full bg-[#222]">
+        // Changed h-screen to min-h-screen to allow for better content overflow handling.
+        <div className="flex min-h-screen w-full bg-[#222]">
             {tabs.map((tab) => {
                 const isActive = tab === openTab;
 
@@ -41,7 +42,7 @@ export default function LayoutAccordion({
                         {/* Tab strip */}
                         <button
                             onClick={() => setOpenTab(tab)}
-                            className={` relative h-full w-16 flex flex-col items-center justify-start pt-4 border-r border-gray-400 transition-colors
+                            className={` relative w-16 flex flex-col items-center justify-start pt-4 border-r border-gray-400 transition-colors
                 ${isActive
                                     ? "bg-white text-black"
                                     : "bg-gradient-to-b from-gray-200 to-gray-400 text-black"
