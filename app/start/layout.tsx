@@ -1,9 +1,11 @@
 "use client";
 
 import LayoutAccordion from "../Components/LayoutAccordion";
+import Navbar from "../Components/Navbar";
 import AuthShell from "../(auth)/AuthShell";
 import { useSelectedLayoutSegment } from "next/navigation";
 
+// removed min-h-0 from the div flex 1
 export default function StartLayout({ children }: { children: React.ReactNode }) {
   const segment = useSelectedLayoutSegment(); // null på /start, "login"/"register" på /start/login osv
   const isAuthMode = segment === "login" || segment === "register";

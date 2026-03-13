@@ -27,27 +27,28 @@ export default function LayoutAccordion({
     SCENARIO: scenario ?? <div className="p-8 text-white">Scenario Content</div>,
   };
 
-  return (
-    <div className="flex h-screen w-full bg-[#222]">
-      {tabs.map((tab) => {
-        const isActive = tab === openTab;
+    return (
+        // Full viewport; change to h-full if PARENT controls HEIGHT
+        // Changed h-screen to min-h-screen to allow for better content overflow handling.
+        <div className="flex min-h-screen w-full bg-[#222]">
+            {tabs.map((tab) => {
+                const isActive = tab === openTab;
 
-        return (
-          <React.Fragment key={tab}>
-            {/* Tab strip */}
-            <button
-              onClick={() => setOpenTab(tab)}
-              className={`relative h-full w-16 flex flex-col items-center justify-start pt-4 border-r border-gray-400 transition-colors
-                ${
-                  isActive
-                    ? "bg-white text-black"
-                    : "bg-gradient-to-b from-gray-200 to-gray-400 text-black"
-                }`}
-            >
-              <span className="[writing-mode:vertical-rl] rotate-180 tracking-[0.25em] font-medium whitespace-nowrap py-4">
-                {tab}
-              </span>
-            </button>
+                return (
+                    <React.Fragment key={tab}>
+                        {/* Tab strip */}
+                        <button
+                            onClick={() => setOpenTab(tab)}
+                            className={` relative w-16 flex flex-col items-center justify-start pt-4 border-r border-gray-400 transition-colors
+                ${isActive
+                                    ? "bg-white text-black"
+                                    : "bg-gradient-to-b from-gray-200 to-gray-400 text-black"
+                                }`}
+                        >
+                            <span className="[writing-mode:vertical-rl] rotate-180 tracking-[0.25em] font-medium whitespace-nowrap py-4">
+                                {tab}
+                            </span>
+                        </button>
 
             {/* Tab content */}
             {isActive && (
