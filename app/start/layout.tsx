@@ -1,30 +1,31 @@
-import AuthShell from "../(auth)/AuthShell";
+"use client";
+
 import LayoutAccordion from "../Components/LayoutAccordion";
 import Navbar from "../Components/Navbar";
+import AuthShell from "../(auth)/AuthShell";
+import { useSelectedLayoutSegment } from "next/navigation";
 
-// START LAYOUTET som används i alla sidor under /start, innehåller en accordion med AuthShell och barnen som är själva sidorna
-// removed min-h-0 from the div flex 1
 export default function StartLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <main className="min-h-screen flex flex-col">
-            <Navbar />
-            <div className="flex-1">
+  const segment = useSelectedLayoutSegment();
+  const isAuthMode = segment === "login" || segment === "register";
 
-                <LayoutAccordion
-                    start={
-                        <>
-                            <AuthShell />
-                            {children}
-                            {/* Här renderas själva innehållet i /start/login eller /start/register beroende på vilken flik som är aktiv, och AuthShell hanterar logiken för att visa rätt innehåll baserat på URL:en */}
-                        </>
-                    }
-                    projects={<div className="p-8 text-white">Projects UI goes here</div>}
-                    endpoints={<div className="p-8 text-white">Endpoints UI goes here</div>}
-                    scenario={<div className="p-8 text-white">Scenario UI goes here</div>}
-                />
-            </div>
-        </main>
-    );
+  return (
+    <main className="min-h-screen flex flex-col">
+      <Navbar />
+      <div className="flex-1">
+        <LayoutAccordion
+          start={
+            <>
+              {isAuthMode ? <AuthShell /> : children}
+            </>
+          }
+          projects={<div className="p-8 text-white">Projects UI goes here</div>}
+          endpoints={<div className="p-8 text-white">Endpoints UI goes here</div>}
+          scenario={<div className="p-8 text-white">Scenario UI goes here</div>}
+        />
+      </div>
+    </main>
+  );
 }
 // FÖRSLAG:
 // Förslag för hur struktur för projekts kanske borde se ut med layout för project, endpoints, och scenario,
