@@ -5,22 +5,26 @@ import Navbar from "../Components/Navbar";
 import AuthShell from "../(auth)/AuthShell";
 import { useSelectedLayoutSegment } from "next/navigation";
 
-// removed min-h-0 from the div flex 1
 export default function StartLayout({ children }: { children: React.ReactNode }) {
-  const segment = useSelectedLayoutSegment(); // null på /start, "login"/"register" på /start/login osv
+  const segment = useSelectedLayoutSegment();
   const isAuthMode = segment === "login" || segment === "register";
 
   return (
-    <LayoutAccordion
-      start={
-        <>
-          {isAuthMode ? <AuthShell /> : children}
-        </>
-      }
-      projects={<div className="p-8 text-white">Projects UI goes here</div>}
-      endpoints={<div className="p-8 text-white">Endpoints UI goes here</div>}
-      scenario={<div className="p-8 text-white">Scenario UI goes here</div>}
-    />
+    <main className="min-h-screen flex flex-col">
+      <Navbar />
+      <div className="flex-1">
+        <LayoutAccordion
+          start={
+            <>
+              {isAuthMode ? <AuthShell /> : children}
+            </>
+          }
+          projects={<div className="p-8 text-white">Projects UI goes here</div>}
+          endpoints={<div className="p-8 text-white">Endpoints UI goes here</div>}
+          scenario={<div className="p-8 text-white">Scenario UI goes here</div>}
+        />
+      </div>
+    </main>
   );
 }
 // FÖRSLAG:
