@@ -28,18 +28,16 @@ export default function EndpointForm({
   onSave,
 }: EndpointFormProps) {
   return (
-    <div className="p-8 text-white">
-      <h1 className="mb-6 text-3xl font-semibold">Bygg endpoint</h1>
+    <div className="p-8">
+      <h1 className="mb-6 text-azure-11">Bygg endpoint</h1>
 
       <div className="mb-5">
-        <label htmlFor="method" className="mb-2 block font-medium">
-          HTTP Method
-        </label>
+        <label className="mb-2 block text-azure-27">HTTP Method</label>
+
         <select
-          id="method"
           value={method}
           onChange={(e) => onMethodChange(e.target.value as HttpMethod)}
-          className="w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-3 text-white"
+          className="input-base w-full"
         >
           <option value="GET">GET</option>
           <option value="POST">POST</option>
@@ -49,44 +47,42 @@ export default function EndpointForm({
       </div>
 
       <div className="mb-5">
-        <label htmlFor="path" className="mb-2 block font-medium">
-          Path
-        </label>
+        <label className="mb-2 block text-azure-27">Path</label>
+
         <input
-          id="path"
-          type="text"
           value={path}
           onChange={(e) => onPathChange(e.target.value)}
           placeholder="/users"
-          className="w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-3 text-white"
+          className="input-base w-full"
         />
       </div>
 
-      <div className="mb-5">
-        <label htmlFor="responseBody" className="mb-2 block font-medium">
-          JSON-response
-        </label>
+      <div className="mb-6">
+        <label className="mb-2 block text-azure-27">JSON-response</label>
+
         <textarea
-          id="responseBody"
           value={responseBody}
           onChange={(e) => onResponseBodyChange(e.target.value)}
           rows={14}
-          placeholder='[{ "id": 1, "name": "Anna" }]'
-          className="w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-3 text-white"
+          className="input-base w-full resize-y font-mono"
         />
       </div>
 
-      <button
-        type="button"
-        onClick={onSave}
-        disabled={isSaving}
-        className="rounded-lg bg-white px-5 py-3 font-medium text-black disabled:opacity-50"
-      >
+      <button onClick={onSave} disabled={isSaving} className="btn-primary">
         {isSaving ? "Sparar..." : "Spara endpoint"}
       </button>
 
-      {error && <p className="mt-4 text-red-400">{error}</p>}
-      {success && <p className="mt-4 text-green-400">{success}</p>}
+      {error && (
+        <p className="mt-4 text-sm" style={{ color: "var(--color-invalid)" }}>
+          {error}
+        </p>
+      )}
+
+      {success && (
+        <p className="mt-4 text-sm" style={{ color: "var(--color-valid)" }}>
+          {success}
+        </p>
+      )}
     </div>
   );
 }

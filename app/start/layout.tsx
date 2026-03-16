@@ -9,7 +9,7 @@ export default function StartLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="flex min-h-screen flex-col bg-background">
       <Navbar />
       <div className="flex-1">
         <LayoutAccordion>{children}</LayoutAccordion>

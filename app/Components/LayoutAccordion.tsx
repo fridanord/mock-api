@@ -41,20 +41,20 @@ export default function LayoutAccordion({ children }: LayoutAccordionProps) {
           <React.Fragment key={tab.label}>
             <Link
               href={tab.href}
-              className={`relative w-16 flex flex-col items-center justify-start pt-4 border-r border-gray-400 transition-colors ${
+              className={`relative flex w-16 flex-col items-center justify-start border-r border-gray-400 pt-4 transition-colors ${
                 isActive
                   ? "bg-white text-black"
                   : "bg-gradient-to-b from-gray-200 to-gray-400 text-black"
               }`}
             >
-              <span className="[writing-mode:vertical-rl] rotate-180 tracking-[0.25em] font-medium whitespace-nowrap py-4">
+              <span className="[writing-mode:vertical-rl] rotate-180 whitespace-nowrap py-4 tracking-[0.25em] font-medium">
                 {tab.label}
               </span>
             </Link>
 
             {isActive && (
               <div className="flex-1 h-full">
-                <div className="w-full h-full bg-[#111] border-l border-neutral-500">
+                <div className="h-full w-full border-l border-neutral-500 bg-[#111]">
                   {children}
                 </div>
               </div>

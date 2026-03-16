@@ -86,24 +86,26 @@ export default function EndpointEditor() {
   }
 
   return (
-    <section className="grid min-h-screen grid-cols-1 gap-6 p-8 lg:grid-cols-2">
-      <div className="rounded-2xl border border-neutral-800 bg-neutral-950">
-        <EndpointForm
-          method={method}
-          path={path}
-          responseBody={responseBody}
-          error={error}
-          success={success}
-          isSaving={isSaving}
-          onMethodChange={setMethod}
-          onPathChange={setPath}
-          onResponseBodyChange={setResponseBody}
-          onSave={handleSave}
-        />
-      </div>
+    <section className="h-full w-full overflow-y-auto p-8">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="card-base">
+          <EndpointForm
+            method={method}
+            path={path}
+            responseBody={responseBody}
+            error={error}
+            success={success}
+            isSaving={isSaving}
+            onMethodChange={setMethod}
+            onPathChange={setPath}
+            onResponseBodyChange={setResponseBody}
+            onSave={handleSave}
+          />
+        </div>
 
-      <div className="rounded-2xl border border-neutral-800 bg-neutral-950">
-        <JsonPreview data={previewData} />
+        <div className="card-base">
+          <JsonPreview data={previewData} />
+        </div>
       </div>
     </section>
   );
