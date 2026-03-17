@@ -25,7 +25,7 @@ export default function EditEndpointBaseInfo({
     const [generateList, setGenerateList] = useState(initialGenerateList);
     const [listCount, setListCount] = useState(initialListCount);
 
-    // Bubble up changes if a handler is provided
+
     useEffect(() => {
         onChange?.({ method, path, generateList, listCount });
     }, [method, path, generateList, listCount, onChange]);
