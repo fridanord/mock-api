@@ -4,7 +4,14 @@ import LayoutAccordion from "../Components/LayoutAccordion";
 import Navbar from "../Components/Navbar";
 import AuthShell from "../(auth)/AuthShell";
 import EditEndpointBase from "../Components/EditEndpointBase";
+import EndpointListContainer, {
+  FakeEndpoint,
+} from "../Components/EndpointListContainer";
 import { useSelectedLayoutSegment } from "next/navigation";
+
+const testEndpoints: FakeEndpoint[] = [
+  { id: "6", method: "GET", path: "/TEST" },
+];
 
 export default function StartLayout({
   children,
@@ -28,6 +35,7 @@ export default function StartLayout({
           endpoints={
             <section>
               <div className="p-8 text-white">Endpoints UI goes here</div>
+              <EndpointListContainer endpoints={testEndpoints} />
               <EditEndpointBase />
             </section>
           }
