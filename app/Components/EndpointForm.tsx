@@ -1,5 +1,6 @@
-"use client";
+﻿"use client";
 
+import Link from "next/link";
 import { HttpMethod } from "./EndpointEditor";
 
 type EndpointFormProps = {
@@ -29,12 +30,32 @@ export default function EndpointForm({
 }: EndpointFormProps) {
   return (
     <div className="p-8">
-      <h1 className="mb-6 text-azure-11">Bygg endpoint</h1>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-azure-11">Grundinstallningar</h2>
+          <p className="mt-2 text-azure-34">
+            Konfigurera metod, path och JSON-svar for endpointen.
+          </p>
+        </div>
+
+        <div className="flex gap-3">
+          <Link href="/start/endpoints" className="btn-secondary">
+            Avbryt
+          </Link>
+
+          <button onClick={onSave} disabled={isSaving} className="btn-primary">
+            {isSaving ? "Sparar..." : "Spara"}
+          </button>
+        </div>
+      </div>
 
       <div className="mb-5">
-        <label className="mb-2 block text-azure-27">HTTP Method</label>
+        <label htmlFor="method" className="mb-2 block text-azure-27">
+          Method
+        </label>
 
         <select
+          id="method"
           value={method}
           onChange={(e) => onMethodChange(e.target.value as HttpMethod)}
           className="input-base w-full"
@@ -47,9 +68,12 @@ export default function EndpointForm({
       </div>
 
       <div className="mb-5">
-        <label className="mb-2 block text-azure-27">Path</label>
+        <label htmlFor="path" className="mb-2 block text-azure-27">
+          Path
+        </label>
 
         <input
+          id="path"
           value={path}
           onChange={(e) => onPathChange(e.target.value)}
           placeholder="/users"
@@ -58,28 +82,32 @@ export default function EndpointForm({
       </div>
 
       <div className="mb-6">
-        <label className="mb-2 block text-azure-27">JSON-response</label>
+        <label htmlFor="responseBody" className="mb-2 block text-azure-27">
+          Response (JSON)
+        </label>
 
         <textarea
+          id="responseBody"
           value={responseBody}
           onChange={(e) => onResponseBodyChange(e.target.value)}
-          rows={14}
+          rows={16}
           className="input-base w-full resize-y font-mono"
         />
       </div>
 
-      <button onClick={onSave} disabled={isSaving} className="btn-primary">
-        {isSaving ? "Sparar..." : "Spara endpoint"}
-      </button>
+      <div className="info-box mb-4">
+        <span>i</span>
+        <p>Tips: borja med GET + 200-svar. Lagg till POST/PUT-validering senare.</p>
+      </div>
 
       {error && (
-        <p className="mt-4 text-sm" style={{ color: "var(--color-invalid)" }}>
+        <p className="status-invalid inline-flex items-center gap-2">
           {error}
         </p>
       )}
 
       {success && (
-        <p className="mt-4 text-sm" style={{ color: "var(--color-valid)" }}>
+        <p className="status-valid inline-flex items-center gap-2">
           {success}
         </p>
       )}

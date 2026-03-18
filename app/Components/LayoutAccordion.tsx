@@ -53,8 +53,8 @@ export default function LayoutAccordion({ children }: LayoutAccordionProps) {
             </Link>
 
             {isActive && (
-              <div className="flex-1 h-full">
-                <div className="h-full w-full border-l border-neutral-500 bg-[#111]">
+              <div className="flex-1">
+                <div className="min-h-screen w-full border-l border-grey-91 bg-background">
                   {children}
                 </div>
               </div>

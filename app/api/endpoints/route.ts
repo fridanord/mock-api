@@ -7,7 +7,7 @@ export async function POST(request: Request) {
 
     if (!method || !path) {
       return NextResponse.json(
-        { message: "Method och path Ã¤r obligatoriska." },
+        { message: "Method och path är obligatoriska." },
         { status: 400 }
       );
     }
