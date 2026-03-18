@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 
@@ -6,33 +6,31 @@ type Tab = "START" | "PROJECTS" | "ENDPOINTS" | "SCENARIO";
 const tabs: Tab[] = ["START", "PROJECTS", "ENDPOINTS", "SCENARIO"];
 
 type LayoutAccordionProps = {
-    start?: React.ReactNode;
-    projects?: React.ReactNode;
-    endpoints?: React.ReactNode;
-    scenario?: React.ReactNode;
+  start?: React.ReactNode;
+  projects?: React.ReactNode;
+  endpoints?: React.ReactNode;
+  scenario?: React.ReactNode;
 };
 
-// Placeholder content for each tab
-// Just import your actual components here
-
 export default function LayoutAccordion({
-    start,
-    projects,
-    endpoints,
-    scenario,
+  start,
+  projects,
+  endpoints,
+  scenario,
 }: LayoutAccordionProps) {
-    const [openTab, setOpenTab] = useState<Tab>("START");
+  const [openTab, setOpenTab] = useState<Tab>("START");
 
-    const content: Record<Tab, React.ReactNode> = {
-        START: start ?? <div className="p-8 text-white">Start Content</div>,
-        PROJECTS: projects ?? <div className="p-8 text-white">Projects Content</div>,
-        ENDPOINTS: endpoints ?? <div className="p-8 text-white">Endpoints Content</div>,
-        SCENARIO: scenario ?? <div className="p-8 text-white">Scenario Content</div>,
-    };
+  const content: Record<Tab, React.ReactNode> = {
+    START: start ?? <div className="p-8 text-white">Start Content</div>,
+    PROJECTS: projects ?? <div className="p-8 text-white">Projects Content</div>,
+    ENDPOINTS: endpoints ?? <div className="p-8 text-white">Endpoints Content</div>,
+    SCENARIO: scenario ?? <div className="p-8 text-white">Scenario Content</div>,
+  };
 
     return (
         // Full viewport; change to h-full if PARENT controls HEIGHT
-        <div className="flex h-screen w-full bg-[#222]">
+        // Changed h-screen to min-h-screen to allow for better content overflow handling.
+        <div className="flex min-h-screen w-full bg-[#222]">
             {tabs.map((tab) => {
                 const isActive = tab === openTab;
 
@@ -41,7 +39,7 @@ export default function LayoutAccordion({
                         {/* Tab strip */}
                         <button
                             onClick={() => setOpenTab(tab)}
-                            className={` relative h-full w-16 flex flex-col items-center justify-start pt-4 border-r border-gray-400 transition-colors
+                            className={` relative w-16 flex flex-col items-center justify-start pt-4 border-r border-gray-400 transition-colors
                 ${isActive
                                     ? "bg-white text-black"
                                     : "bg-gradient-to-b from-gray-200 to-gray-400 text-black"
@@ -52,19 +50,17 @@ export default function LayoutAccordion({
                             </span>
                         </button>
 
-                        {/* Tab content */}
-                        {isActive && (
-                            <div className="flex-1 h-full">
-                                <div className="w-full h-full bg-[#111] border-l border-neutral-500">
-                                    {content[tab]}
-                                </div>
-                            </div>
-                        )}
-                    </React.Fragment>
-                );
-            })}
-        </div>
-    );
+            {/* Tab content */}
+            {isActive && (
+              <div className="flex-1 h-full">
+                <div className="w-full h-full bg-[#111] border-l border-neutral-500">
+                  {content[tab]}
+                </div>
+              </div>
+            )}
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
 }
-
-
