@@ -1,60 +1,61 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import Link from "next/link";
+import { useSelectedLayoutSegment } from "next/navigation";
 
-type Tab = "START" | "PROJECTS" | "ENDPOINTS" | "SCENARIO";
-const tabs: Tab[] = ["START", "PROJECTS", "ENDPOINTS", "SCENARIO"];
-
-type LayoutAccordionProps = {
-  start?: React.ReactNode;
-  projects?: React.ReactNode;
-  endpoints?: React.ReactNode;
-  scenario?: React.ReactNode;
+type Tab = {
+  label: "START" | "PROJECTS" | "ENDPOINTS" | "SCENARIO";
+  href: string;
 };
 
-export default function LayoutAccordion({
-  start,
-  projects,
-  endpoints,
-  scenario,
-}: LayoutAccordionProps) {
-  const [openTab, setOpenTab] = useState<Tab>("START");
+const tabs: Tab[] = [
+  { label: "START", href: "/start" },
+  { label: "PROJECTS", href: "/start/projects" },
+  { label: "ENDPOINTS", href: "/start/endpoints" },
+  { label: "SCENARIO", href: "/start/scenario" },
+];
 
-  const content: Record<Tab, React.ReactNode> = {
-    START: start ?? <div className="p-8 text-white">Start Content</div>,
-    PROJECTS: projects ?? <div className="p-8 text-white">Projects Content</div>,
-    ENDPOINTS: endpoints ?? <div className="p-8 text-white">Endpoints Content</div>,
-    SCENARIO: scenario ?? <div className="p-8 text-white">Scenario Content</div>,
-  };
+type LayoutAccordionProps = {
+  children: React.ReactNode;
+};
 
-    return (
-        // Full viewport; change to h-full if PARENT controls HEIGHT
-        // Changed h-screen to min-h-screen to allow for better content overflow handling.
-        <div className="flex min-h-screen w-full bg-[#222]">
-            {tabs.map((tab) => {
-                const isActive = tab === openTab;
+export default function LayoutAccordion({ children }: LayoutAccordionProps) {
+  const segment = useSelectedLayoutSegment();
 
-                return (
-                    <React.Fragment key={tab}>
-                        {/* Tab strip */}
-                        <button
-                            onClick={() => setOpenTab(tab)}
-                            className={` relative w-16 flex flex-col items-center justify-start pt-4 border-r border-gray-400 transition-colors
-                ${isActive
-                                    ? "bg-white text-black"
-                                    : "bg-gradient-to-b from-gray-200 to-gray-400 text-black"
-                                }`}
-                        >
-                            <span className="[writing-mode:vertical-rl] rotate-180 tracking-[0.25em] font-medium whitespace-nowrap py-4">
-                                {tab}
-                            </span>
-                        </button>
+  const activeLabel =
+    segment === "projects"
+      ? "PROJECTS"
+      : segment === "endpoints"
+      ? "ENDPOINTS"
+      : segment === "scenario"
+      ? "SCENARIO"
+      : "START";
 
-            {/* Tab content */}
+  return (
+    <div className="flex min-h-screen w-full bg-[#222]">
+      {tabs.map((tab) => {
+        const isActive = tab.label === activeLabel;
+
+        return (
+          <React.Fragment key={tab.label}>
+            <Link
+              href={tab.href}
+              className={`relative flex w-16 flex-col items-center justify-start border-r border-gray-400 pt-4 transition-colors ${
+                isActive
+                  ? "bg-white text-black"
+                  : "bg-gradient-to-b from-gray-200 to-gray-400 text-black"
+              }`}
+            >
+              <span className="[writing-mode:vertical-rl] rotate-180 whitespace-nowrap py-4 tracking-[0.25em] font-medium">
+                {tab.label}
+              </span>
+            </Link>
+
             {isActive && (
-              <div className="flex-1 h-full">
-                <div className="w-full h-full bg-[#111] border-l border-neutral-500">
-                  {content[tab]}
+              <div className="flex-1">
+                <div className="min-h-screen w-full border-l border-grey-91 bg-background">
+                  {children}
                 </div>
               </div>
             )}

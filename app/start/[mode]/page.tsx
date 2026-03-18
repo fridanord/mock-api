@@ -1,16 +1,22 @@
-import { notFound } from "next/navigation";
+import AuthShell from "@/app/(auth)/AuthShell";
 
-// StartModePage är en sida som hanterar både login och register baserat på URL:en, den tar emot params som innehåller mode (antingen "login" eller "register") och om mode inte är giltigt så visas en 404-sida. Den returnerar null eftersom själva innehållet renderas i AuthShell-komponenten som ligger i layouten.
-export default async function StartModePage({
-    params,
-}: {
-    params: Promise<{ mode: string }>;
-}) {
-    const { mode } = await params;
+type ModePageProps = {
+  params: {
+    mode: string;
+  };
+};
 
-    if (mode !== "login" && mode !== "register") {
-        notFound(); // Om mode inte är "login" eller "register", visa 404-sidan
-    }
+export default function ModePage({ params }: ModePageProps) {
+  const validModes = ["login", "register"];
 
-    return null;
+  if (!validModes.includes(params.mode)) {
+    return (
+      <div className="p-8 text-white">
+        <h1 className="mb-4 text-2xl font-semibold">Ogiltig sida</h1>
+        <p>Den här sidan finns inte.</p>
+      </div>
+    );
+  }
+
+  return <AuthShell />;
 }
