@@ -27,7 +27,7 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
     }
 
     return (
-        <section className="w-full max-w-md">
+        <section className="w-full max-w-md mt-16">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">
                 <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
 
