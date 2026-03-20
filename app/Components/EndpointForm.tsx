@@ -1,7 +1,8 @@
 ﻿"use client";
 
 import Link from "next/link";
-import { HttpMethod } from "./EndpointEditor";
+
+type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 type EndpointFormProps = {
   method: HttpMethod;
@@ -63,6 +64,7 @@ export default function EndpointForm({
           <option value="GET">GET</option>
           <option value="POST">POST</option>
           <option value="PUT">PUT</option>
+          <option value="PATCH">PATCH</option>
           <option value="DELETE">DELETE</option>
         </select>
       </div>
@@ -97,7 +99,9 @@ export default function EndpointForm({
 
       <div className="info-box mb-4">
         <span>i</span>
-        <p>Tips: borja med GET + 200-svar. Lagg till POST/PUT-validering senare.</p>
+        <p>
+          Tips: borja med GET + 200-svar. Lagg till POST/PUT-validering senare.
+        </p>
       </div>
 
       {error && (
