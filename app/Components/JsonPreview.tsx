@@ -6,9 +6,9 @@ export default function JsonPreview({ data }: JsonPreviewProps) {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <h2 className="text-azure-11">Forhandsvisning</h2>
+        <h2 className="text-azure-11">Förhandsvisning</h2>
         <p className="mt-2 text-azure-34">
-          Sa har ser endpoint-datan ut just nu.
+          Så här ser endpoint-datan ut just nu.
         </p>
       </div>
 
