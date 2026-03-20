@@ -1,20 +1,70 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import EndpointListContainer, {
   FakeEndpoint,
 } from "@/app/Components/EndpointListContainer";
 
-const mockEndpoints: FakeEndpoint[] = [
-  { id: "1", method: "GET", path: "/users", countLabel: "lista ×5" },
-  { id: "2", method: "POST", path: "/users" },
-  { id: "3", method: "GET", path: "/products", countLabel: "lista ×10" },
-  { id: "4", method: "GET", path: "/products/:id" },
-];
+const PROJECT_ID = "69bbd7e8257df51484ad3002";
+
+type EndpointFromApi = {
+  _id: string;
+  name: string;
+  projectId: string;
+  method: FakeEndpoint["method"];
+  path: string;
+  requestBody: unknown;
+  responseBody: unknown;
+  generateList?: boolean;
+  listCount?: number;
+};
 
 export default function EndpointsPage() {
   const router = useRouter();
+  const [endpoints, setEndpoints] = useState<FakeEndpoint[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchEndpoints = async () => {
+      try {
+        setIsLoading(true);
+        setError("");
+
+        const response = await fetch(
+          `/api/endpoints?projectId=${PROJECT_ID}`
+        );
+
+        const data: EndpointFromApi[] = await response.json();
+
+        if (!response.ok) {
+          throw new Error("Kunde inte hamta endpoints.");
+        }
+
+        const mappedEndpoints: FakeEndpoint[] = data.map((endpoint) => ({
+          id: endpoint._id,
+          method: endpoint.method,
+          path: endpoint.path,
+          countLabel:
+            endpoint.generateList && endpoint.listCount
+              ? `lista ×${endpoint.listCount}`
+              : undefined,
+        }));
+
+        setEndpoints(mappedEndpoints);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Nagot gick fel vid hamtning."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEndpoints();
+  }, []);
 
   return (
     <div className="h-full w-full overflow-y-auto p-8">
@@ -40,14 +90,42 @@ export default function EndpointsPage() {
           </Link>
         </div>
 
-        <EndpointListContainer
-          endpoints={mockEndpoints}
-          onEdit={(endpoint) =>
-            router.push(`/start/endpoints/edit?id=${endpoint.id}`)
-          }
-          onTest={(endpoint) => console.log("Test endpoint:", endpoint)}
-          onDelete={(endpoint) => console.log("Delete endpoint:", endpoint)}
-        />
+        {isLoading && (
+          <div className="card-base p-6">
+            <p className="text-azure-34">Laddar endpoints...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="card-base p-6">
+            <p className="status-invalid inline-flex items-center gap-2">
+              {error}
+            </p>
+          </div>
+        )}
+
+        {!isLoading && !error && endpoints.length === 0 && (
+          <div className="card-base p-6">
+            <p className="text-azure-34">
+              Inga endpoints hittades for detta projekt an.
+            </p>
+          </div>
+        )}
+
+        {!isLoading && !error && endpoints.length > 0 && (
+          <EndpointListContainer
+            endpoints={endpoints}
+            onEdit={(endpoint) =>
+              router.push(`/start/endpoints/edit?id=${endpoint.id}`)
+            }
+            onTest={(endpoint) => {
+              console.log("Test endpoint:", endpoint);
+            }}
+            onDelete={(endpoint) => {
+              console.log("Delete endpoint:", endpoint);
+            }}
+          />
+        )}
       </div>
     </div>
   );
