@@ -4,8 +4,7 @@
 
 This document describes the currently implemented API endpoints for managing mock endpoints in the project.
 
-Base route:
-/api/endpoints
+Base route: `/api/endpoints`
 
 ## Authentication
 
@@ -15,11 +14,11 @@ No authentication is currently required.
 
 All requests and responses use JSON.
 
-Content-Type: application/json
+`Content-Type: application/json`
 
-## Error format
+## Error Format
 
-All error responses return:
+All error responses return the following structure:
 
 {
 "message": "Error description"
@@ -27,7 +26,7 @@ All error responses return:
 
 ---
 
-## Endpoint model
+## Endpoint Model
 
 {
 "\_id": "6800aa11bb22cc33dd44ee55",
@@ -36,17 +35,35 @@ All error responses return:
 "method": "GET",
 "path": "/users",
 "requestBody": null,
-"responseBody": {
-"users": [
+"responseBody": [
 {
 "id": 1,
 "name": "Alice"
 }
-]
-},
+],
 "generateList": true,
-"listCount": 10
+"listCount": 1
 }
+
+### Field Description
+
+- `_id` — MongoDB-generated identifier for the endpoint
+- `name` — human-readable endpoint name
+- `projectId` — reference to the related project
+- `method` — HTTP method
+- `path` — endpoint path
+- `requestBody` — request payload definition, currently nullable
+- `responseBody` — mock response body
+- `generateList` — indicates whether the response is treated as a list
+- `listCount` — number of items if the response is a list
+
+### Supported HTTP Methods
+
+- `GET`
+- `POST`
+- `PUT`
+- `PATCH`
+- `DELETE`
 
 ---
 
@@ -54,7 +71,7 @@ All error responses return:
 
 Creates a new endpoint.
 
-### Request body
+### Request Body
 
 {
 "name": "Get users",
@@ -62,21 +79,19 @@ Creates a new endpoint.
 "method": "GET",
 "path": "/users",
 "requestBody": null,
-"responseBody": {
-"users": [
+"responseBody": [
 {
 "id": 1,
 "name": "Alice"
 }
-]
-},
+],
 "generateList": true,
-"listCount": 10
+"listCount": 1
 }
 
-### Success response
+### Success Response
 
-Status: 201 Created
+**Status:** `201 Created`
 
 {
 "\_id": "6800aa11bb22cc33dd44ee55",
@@ -85,30 +100,28 @@ Status: 201 Created
 "method": "GET",
 "path": "/users",
 "requestBody": null,
-"responseBody": {
-"users": [
+"responseBody": [
 {
 "id": 1,
 "name": "Alice"
 }
-]
-},
+],
 "generateList": true,
-"listCount": 10
+"listCount": 1
 }
 
-### Error responses
+### Error Responses
 
-Status: 400 Bad Request
+**Status:** `400 Bad Request`
 
 {
-"message": "Invalid request body"
+"message": "name, projectId, method, path och responseBody krävs."
 }
 
-Status: 500 Internal Server Error
+**Status:** `500 Internal Server Error`
 
 {
-"message": "Internal server error"
+"message": "Kunde inte skapa endpoint."
 }
 
 ---
@@ -117,13 +130,13 @@ Status: 500 Internal Server Error
 
 Returns all endpoints for a specific project.
 
-### Example request
+### Example Request
 
 GET /api/endpoints?projectId=67f123abc456def789012345
 
-### Success response
+### Success Response
 
-Status: 200 OK
+**Status:** `200 OK`
 
 [
 {
@@ -133,37 +146,37 @@ Status: 200 OK
 "method": "GET",
 "path": "/users",
 "requestBody": null,
-"responseBody": {
-"users": [
+"responseBody": [
 {
 "id": 1,
 "name": "Alice"
 }
-]
-},
+],
 "generateList": true,
-"listCount": 10
+"listCount": 1
 }
 ]
 
-### Error responses
+### Error Responses
 
-Status: 400 Bad Request
+**Status:** `400 Bad Request`
 
 {
-"message": "projectId is required"
+"message": "projectId krävs för att hämta endpoints."
 }
 
-Status: 500 Internal Server Error
+**Status:** `500 Internal Server Error`
 
 {
-"message": "Internal server error"
+"message": "Kunde inte hämta endpoints."
 }
 
 ---
 
 ## Notes
 
-- Only the currently implemented endpoints are documented
-- No authentication is currently used
-- Error format is simplified
+- Only the currently implemented endpoints are documented.
+- No authentication is currently used.
+- The API currently supports create and fetch operations for endpoints.
+- Frontend and backend are currently connected through `/api/endpoints`.
+- Dynamic authentication and project selection may be added later.
