@@ -1,7 +1,7 @@
 
 import LogRegComponent from "../Components/LogRegComponent";
 
-type Mode = "login" | "register";
+export type Mode = "login" | "register";
 
 type AuthShellProps = {
     mode: Mode;
