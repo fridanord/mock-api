@@ -1,15 +1,16 @@
-import AuthShell from "@/app/(auth)/AuthShell";
+import AuthShell, { Mode } from "@/app/(auth)/AuthShell";
 
 type ModePageProps = {
-  params: {
+  params: Promise<{
     mode: string;
-  };
+  }>;
 };
 
-export default function ModePage({ params }: ModePageProps) {
+export default async function ModePage({ params }: ModePageProps) {
+  const { mode } = await params;
   const validModes = ["login", "register"];
 
-  if (!validModes.includes(params.mode)) {
+  if (!validModes.includes(mode)) {
     return (
       <div className="p-8 text-white">
         <h1 className="mb-4 text-2xl font-semibold">Ogiltig sida</h1>
@@ -18,5 +19,5 @@ export default function ModePage({ params }: ModePageProps) {
     );
   }
 
-  return <AuthShell />;
+  return <AuthShell mode={mode as Mode} />;
 }
