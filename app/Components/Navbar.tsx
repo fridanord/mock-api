@@ -2,10 +2,11 @@
 "use client";
 
 import { signIn, signOut, useSession } from "next-auth/react";
-
+import { useRouter } from "next/navigation";
 export default function Navbar() {
     const { data: session, status } = useSession();
-
+    
+const router = useRouter();
     return (
         <nav className="flex w-auto flex-col items-start px-6 lg:px-24 2xl:px-[30rem] bg-white border-b border-gray-200">
             <section className="flex h-16 w-full items-center justify-between">
@@ -67,7 +68,7 @@ export default function Navbar() {
                         ) : (
                             <button
                                 type="button"
-                                onClick={() => signIn("google", { callbackUrl: "/start" })}
+                                 onClick={() => router.push("/start/login")}
                                 className="inline-flex h-9 items-center rounded-md border border-gray-300 px-4 text-sm font-medium text-gray-800 hover:bg-gray-100"
                             >
                                 Logga in

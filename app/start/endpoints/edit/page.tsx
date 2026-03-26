@@ -1,9 +1,17 @@
-﻿"use client";
-
+﻿
 import Link from "next/link";
 import EndpointEditor from "@/app/Components/EndpointEditor";
+import { authOptions } from "@/lib/authOptions";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-export default function EditEndpointPage() {
+export default async function EditEndpointPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/start/login");
+  }
+
   return (
     <div className="h-full w-full overflow-y-auto p-8">
       <div className="max-w-6xl flex flex-col gap-6">

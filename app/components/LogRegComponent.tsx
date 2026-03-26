@@ -14,11 +14,55 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        onSubmit?.({ mode, email, password });
-        console.log(mode, email);
+    // function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    //     e.preventDefault();
+    //     onSubmit?.({ mode, email, password });
+    //     console.log(mode, email);
+    // }
+
+
+async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (mode === "register") {
+        try {
+            const response = await fetch("/api/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.message || "Kunde inte registrera användaren.");
+                return;
+            }
+
+            alert("Konto skapat! Du kan nu logga in.");
+        } catch (error) {
+            console.error(error);
+            alert("Något gick fel vid registrering.");
+        }
+
+        return;
     }
+
+    if (mode === "login") {
+        await signIn("credentials", {
+            email,
+            password,
+            callbackUrl: "/start",
+        });
+    }
+}
+
+
     // Saker att eventuellt lägga till:
     // Passera handleOAuth som prop kanske blir enklare att testa och mer flexibelt
     // function handleOAuth() {
