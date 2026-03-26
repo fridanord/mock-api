@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Endpoint from "@/models/endpoint";
-import { connectDB } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongoose";
 
 export async function GET(request: Request) {
   try {

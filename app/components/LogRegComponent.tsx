@@ -1,8 +1,7 @@
 "use client";
-
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
-
 type Mode = "login" | "register";
 type AuthFormValues = { mode: Mode; email: string; password: string };
 type LogRegComponentProps = { mode: Mode; onSubmit?: (values: AuthFormValues) => void };
@@ -22,9 +21,9 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
     }
     // Saker att eventuellt lägga till:
     // Passera handleOAuth som prop kanske blir enklare att testa och mer flexibelt
-    function handleOAuth() {
-        console.log("OAuth");
-    }
+    // function handleOAuth() {
+    //     console.log("OAuth");
+    // }
 
     return (
         <section className="w-full max-w-md mt-16">
@@ -109,10 +108,10 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
 
                     <button
                         type="button"
-                        onClick={handleOAuth}
+                        onClick={() => signIn("google", { callbackUrl: "/" })}
                         className="w-full rounded-xl bg-slate-950 px-4 py-3 text-sm font-medium text-white hover:bg-slate-900"
                     >
-                        Use OAuth
+                        Login with Google
                     </button>
 
                     <p className="pt-2 text-xs text-gray-500">
