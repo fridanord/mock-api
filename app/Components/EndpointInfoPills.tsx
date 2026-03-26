@@ -13,13 +13,7 @@ const methodBadgeClass: Record<HttpMethod, string> = {
 };
 
 export function EndpointMethodPill({ method }: EndpointMethodPillProps) {
-    return (
-        <span
-            className={`method-badge ${methodBadgeClass[method]}`}
-        >
-            {method}
-        </span>
-    );
+    return <span className={`method-badge ${methodBadgeClass[method]}`}>{method}</span>;
 }
 
 interface EndpointCountPillProps {
@@ -27,7 +21,5 @@ interface EndpointCountPillProps {
 }
 
 export function EndpointCountPill({ label }: EndpointCountPillProps) {
-    return (
-        <span className="list-badge">{label}</span>
-    );
+    return <span className="list-badge">{label}</span>;
 }
