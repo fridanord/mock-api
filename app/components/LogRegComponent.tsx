@@ -108,7 +108,7 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
 
                     <button
                         type="button"
-                        onClick={() => signIn("google", { callbackUrl: "/" })}
+                        onClick={() => signIn("google", { callbackUrl: "/start" })}
                         className="w-full rounded-xl bg-slate-950 px-4 py-3 text-sm font-medium text-white hover:bg-slate-900"
                     >
                         Login with Google
