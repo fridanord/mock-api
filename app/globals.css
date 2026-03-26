@@ -212,11 +212,21 @@
   .badge-get {
     @apply bg-blue-89 text-blue-34;
   }
+
   .badge-post {
     @apply bg-grey-93 text-green-36;
   }
+
   .badge-put {
     @apply bg-yellow-89 text-orange-44;
+  }
+
+  .badge-patch {
+  @apply bg-yellow-89 text-orange-44;
+  }
+
+.badge-delete {
+  @apply bg-red-100 text-red-600;
   }
 
   .list-badge {
