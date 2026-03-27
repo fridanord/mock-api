@@ -1,6 +1,8 @@
+
 "use client";
 
 import React from "react";
+import { useSession } from "next-auth/react";
 import LogRegComponent from "./LogRegComponent";
 
 type AuthMode = "login" | "register";
@@ -35,7 +37,6 @@ function Modal({
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center p-6">
-      {/* backdrop */}
       <button
         type="button"
         aria-label="Close modal"
@@ -43,7 +44,6 @@ function Modal({
         className="absolute inset-0 bg-black/60"
       />
 
-      {/* dialog */}
       <div className="relative w-full max-w-md">
         <div className="card-base shadow-[0_20px_60px_rgba(0,0,0,0.20)]">
           <div className="flex items-center justify-between px-6 py-5">
@@ -75,8 +75,15 @@ function Modal({
 }
 
 export default function Hero() {
+  const { data: session } = useSession();
   const [modalOpen, setModalOpen] = React.useState(false);
   const [mode, setMode] = React.useState<AuthMode>("login");
+
+  React.useEffect(() => {
+    if (session?.user) {
+      setModalOpen(false);
+    }
+  }, [session]);
 
   const handleSubmit = async (data: Record<string, unknown>) => {
     console.log("Auth submit:", mode, data);
@@ -99,8 +106,7 @@ export default function Hero() {
 
               <p className="mt-3 text-sm text-azure-34 max-w-[52ch]">
                 Skapa egna URL:er för att öva{" "}
-                <span className="font-mono">fetch()</span> utan att sätta upp en
-                backend.
+                <span className="font-mono">fetch()</span> utan att sätta upp en backend.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3">
@@ -140,12 +146,14 @@ export default function Hero() {
                 <li>4) Testa och kopiera URL</li>
               </ol>
 
-              <div className="mt-5 rounded-xl border border-grey-91 bg-white p-4">
-                <div className="text-xs text-azure-65">Exempel</div>
-                <div className="mt-2 text-xs font-mono text-azure-11">
-                  GET /users → 200 / 500 → kopiera URL
+              {session?.user && (
+                <div className="mt-5 rounded-xl border border-grey-91 bg-white p-4">
+                  <div className="text-xs text-azure-65">Inloggad användare</div>
+                  <div className="mt-2 text-sm text-azure-11">
+                    {session.user.name ?? session.user.email}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

@@ -1,4 +1,14 @@
-export default function ScenarioPage() {
+import { authOptions } from "@/lib/authOptions";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+
+
+export default async function ScenarioPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/start/login");
+  }
   return (
     <div className="h-full w-full overflow-y-auto p-8">
       <div className="max-w-5xl flex flex-col gap-6">

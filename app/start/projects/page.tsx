@@ -1,5 +1,7 @@
 import Link from "next/link";
-
+import { authOptions } from "@/lib/authOptions";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 const mockProjects = [
   {
     id: "1",
@@ -13,7 +15,12 @@ const mockProjects = [
   },
 ];
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/start/login");
+  }
   return (
     <div className="h-full w-full overflow-y-auto p-8">
       <div className="max-w-5xl flex flex-col gap-6">

@@ -1,10 +1,12 @@
+
 "use client";
 
-type NavbarProps = {
-    email?: string;
-};
-
-export default function Navbar({ email = "student@example.com" }: NavbarProps) {
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+export default function Navbar() {
+    const { data: session, status } = useSession();
+    
+const router = useRouter();
     return (
         <nav className="flex w-auto flex-col items-start px-6 lg:px-24 2xl:px-[30rem] bg-white border-b border-gray-200">
             <section className="flex h-16 w-full items-center justify-between">
@@ -25,7 +27,15 @@ export default function Navbar({ email = "student@example.com" }: NavbarProps) {
 
                 <section className="flex items-center gap-3">
                     <div className="flex flex-col items-start">
-                        <p className="text-sm text-gray-600">{email}</p>
+                        {status === "loading" ? (
+                            <p className="text-sm text-gray-600">Laddar...</p>
+                        ) : session?.user ? (
+                            <p className="text-sm text-gray-600">
+                                {session.user.email}
+                            </p>
+                        ) : (
+                            <p className="text-sm text-gray-600">Inte inloggad</p>
+                        )}
                     </div>
 
                     <div>
@@ -47,12 +57,23 @@ export default function Navbar({ email = "student@example.com" }: NavbarProps) {
                     </div>
 
                     <div>
-                        <button
-                            type="button"
-                            className="inline-flex h-9 items-center rounded-md border border-gray-300 px-4 text-sm font-medium text-gray-800 hover:bg-gray-100"
-                        >
-                            Logga ut
-                        </button>
+                        {session?.user ? (
+                            <button
+                                type="button"
+                                onClick={() => signOut({ callbackUrl: "/start" })}
+                                className="inline-flex h-9 items-center rounded-md border border-gray-300 px-4 text-sm font-medium text-gray-800 hover:bg-gray-100"
+                            >
+                                Logga ut
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                 onClick={() => router.push("/start/login")}
+                                className="inline-flex h-9 items-center rounded-md border border-gray-300 px-4 text-sm font-medium text-gray-800 hover:bg-gray-100"
+                            >
+                                Logga in
+                            </button>
+                        )}
                     </div>
                 </section>
             </section>
