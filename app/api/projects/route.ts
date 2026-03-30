@@ -20,3 +20,26 @@ export async function GET(request: Request) {
         return NextResponse.json({ message: "Internt serverfel" }, { status: 500 });
     }
 }
+
+export async function POST(request: Request) {
+    try {
+        await connectDB();
+        const body = await request.json();
+        const { name, description, ownerId} = body;
+
+        if (!name || !ownerId) {
+            return NextResponse.json({ message: "Namn och ownerId krävs" }, { status: 400 });
+        }
+
+        const newProject = await Project.create({
+            name,
+            description,
+            ownerId,
+        });
+
+        return NextResponse.json(newProject, { status: 201 });
+    } catch (error) {
+        console.error("POST Error:", error);
+        return NextResponse.json({ message: "Kunde inte skapa projekt" }, { status: 500 });
+    }
+}
