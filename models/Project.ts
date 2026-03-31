@@ -16,7 +16,8 @@ const ProjectSchema = new Schema(
         apiKey: {
             type: String,
             required: true,
-            unique: true
+            unique: true,
+            default: () => `sk_${Math.random().toString(36).substring(2, 11)}`
         },
         description: {
             type: String,

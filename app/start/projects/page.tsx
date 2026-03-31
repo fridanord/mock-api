@@ -61,10 +61,13 @@ export default function ProjectsPage() {
               Hanterar projekt för <span className="font-semibold">{session?.user?.email}</span>
             </p>
           </div>
-          <button className="btn-primary flex items-center gap-2">
+          <Link
+            href="/start/projects/new"
+            className="btn-primary flex items-center gap-2"
+          >
             <Plus size={18} />
-            Skapa projekt
-          </button>
+            Skapa project
+          </Link>
         </div>
 
         <div className="card-base">
