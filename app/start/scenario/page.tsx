@@ -1,6 +1,8 @@
-import ScenarioPickerCard from "@/app/Components/ScenarioPickerCard";
+
 import type { EndpointSummary } from "@/app/Components/Mocktypes/mocktypes";
 import { mockEndpoints } from "@/app/Components/Mocktypes/mockData";
+import ScenarioNewPicker from "@/app/Components/ScenarioPickerCard";
+import ScenarioPickerCard from "@/app/Components/ScenarioPickerCard";
 
 
 export default function ScenarioPage() {
@@ -36,10 +38,9 @@ export default function ScenarioPage() {
           </button>
         </div> */}
 
-        <div className="card-base pb-80 ">
-          <div className="flex justify-center">
-            <ScenarioPickerCard endpoints={mockEndpoints as EndpointSummary[]} />
-          </div>
+
+        <div className="flex justify-center py-8">
+          <ScenarioPickerCard endpoints={mockEndpoints as EndpointSummary[]} />
         </div>
 
 
