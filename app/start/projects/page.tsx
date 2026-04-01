@@ -1,128 +1,88 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import ProjectCard from "@/app/Components/ProjectCard";
+import { Loader2, Plus, PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { Loader2, Plus, Folder } from "lucide-react";
 
-interface Project {
-  _id: string;
-  name: string;
-  description?: string;
-}
-
-export default function ProjectsPage() {
+export default function DashboardPage() {
   const { data: session, status } = useSession();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const userId = (session?.user as any)?.id;
-
-    const fetchProjects = async (id: string) => {
-      try {
-        const response = await fetch(`/api/projects?ownerId=${id}`);
-        if (!response.ok) throw new Error();
-        
-        const data = await response.json();
-        setProjects(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error("Fetch error:", error);
-      } finally {
-        setIsLoading(false);
+    const fetchProjects = async () => {
+      if (status === "authenticated") {
+        try {
+          const userId = (session?.user as any)?.id;
+          const res = await fetch(`/api/projects?ownerId=${userId}`);
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          setProjects(data);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsLoading(false);
+        }
       }
     };
-
-    if (status === "authenticated" && userId) {
-      fetchProjects(userId);
-    } else if (status === "unauthenticated" || (status === "authenticated" && !userId)) {
-      setIsLoading(false);
-    }
-  }, [session, status]);
+    fetchProjects();
+  }, [status, session]);
 
   if (status === "loading" || isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-slate-50">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="animate-spin text-azure-11" size={40} />
-        </div>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="animate-spin text-azure-65" size={40} />
       </div>
     );
   }
 
   return (
-    <div className="h-full w-full overflow-y-auto p-8 bg-slate-50 font-figtree">
-      <div className="max-w-5xl mx-auto flex flex-col gap-8">
-        
-        <div className="flex justify-between items-end">
-          <div>
-            <h1 className="text-3xl font-bold text-azure-11 tracking-tight">Projects</h1>
-            <p className="text-azure-34 text-sm mt-2">
-              Hanterar projekt för <span className="font-semibold">{session?.user?.email}</span>
-            </p>
-          </div>
-          <Link
-            href="/start/projects/new"
-            className="btn-primary flex items-center gap-2"
-          >
-            <Plus size={18} />
-            Skapa project
-          </Link>
+    <div className="p-8 max-w-4xl mx-auto animate-in fade-in duration-500">
+      <div className="flex justify-between items-start mb-12">
+        <div>
+          <h1 className="text-azure-11 mb-1">Dashboard</h1>
+          <p className="text-azure-34 text-sm font-medium">
+            Hej, <span className="text-azure-11">{session?.user?.email}</span>
+          </p>
         </div>
-
-        <div className="card-base">
-          <div className="border-b border-grey-91 px-6 py-5">
-            <h2 className="text-azure-11 font-semibold uppercase tracking-wider text-xs">
-              Dina projekt ({projects.length})
-            </h2>
-          </div>
-
-          <div className="divide-y divide-grey-91">
-            {projects.length > 0 ? (
-              projects.map((project) => (
-                <div 
-                  key={project._id} 
-                  className="flex flex-col gap-3 px-6 py-4 md:flex-row md:items-center md:justify-between hover:bg-grey-96 transition-colors group"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="p-2 bg-blue-50 text-azure-11 rounded-lg group-hover:bg-azure-11 group-hover:text-white transition-colors">
-                      <Folder size={20} />
-                    </div>
-                    <div>
-                      <h3 className="text-azure-11 font-medium">{project.name}</h3>
-                      <p className="text-azure-34 text-xs">
-                        {project.description || "Ingen beskrivning."}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Link 
-                      href={`/start/endpoints?projectId=${project._id}`}
-                      className="btn-secondary"
-                    >
-                      Öppna
-                    </Link>
-                    <button className="btn-delete">
-                      Ta bort
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="py-20 text-center">
-                <p className="text-azure-34 italic text-sm">
-                  Inga projekt hittades. Skapa ditt första projekt för att börja!
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="card-footer">
-            Här visas alla projekt kopplade till ditt konto.
-          </div>
-        </div>
+        <Link href="/start/projects/new" className="btn-primary">
+          <Plus size={18} /> Skapa nytt projekt
+        </Link>
       </div>
+
+      <div className="flex flex-col gap-2">
+        {projects.length > 0 ? (
+          <>
+            {projects.map((project: any) => (
+              <ProjectCard key={project._id} project={project} />
+            ))}
+            <Link 
+              href="/start/projects/new"
+              className="w-full py-16 border-2 border-dashed border-grey-91 rounded-card flex flex-col items-center justify-center gap-3 text-azure-65 hover:bg-white hover:border-azure-84 hover:text-azure-34 transition-all group mt-4"
+            >
+              <PlusCircle size={32} className="group-hover:scale-110 transition-transform text-azure-84" />
+              <span className="text-sm font-bold uppercase tracking-widest">Skapa ett nytt projekt</span>
+            </Link>
+          </>
+        ) : (
+          <div className="text-center py-20 bg-grey-98 rounded-card border border-grey-91">
+            <PlusCircle className="mx-auto text-azure-84 mb-4" size={48} />
+            <h3 className="text-azure-27 mb-2">Inga projekt hittades</h3>
+            <p className="text-azure-65 text-sm mb-6">Börja med att skapa ditt första projekt för att generera API-nycklar.</p>
+            <Link href="/start/projects/new" className="btn-primary mx-auto w-fit">
+              Kom igång här
+            </Link>
+          </div>
+        )}
+      </div>
+
+      <footer className="mt-20 border-t border-grey-91 pt-8">
+        <p className="text-center text-[10px] text-azure-84 font-bold uppercase tracking-[0.2em] leading-loose max-w-sm mx-auto">
+          Prototyp i canvas: visar UX-flöde. I riktig app kopplas detta till Next.js pages + backend-API.
+        </p>
+      </footer>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import mongoose, { Schema, model, models } from "mongoose";
+import crypto from "crypto";
 
 const ProjectSchema = new Schema(
     {
@@ -17,7 +18,7 @@ const ProjectSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            default: () => `sk_${Math.random().toString(36).substring(2, 11)}`
+            default: () => `mk_${crypto.randomBytes(12).toString("hex")}`
         },
         description: {
             type: String,
