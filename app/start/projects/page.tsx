@@ -80,7 +80,7 @@ export default function DashboardPage() {
 
       <footer className="mt-20 border-t border-grey-91 pt-8">
         <p className="text-center text-[10px] text-azure-84 font-bold uppercase tracking-[0.2em] leading-loose max-w-sm mx-auto">
-          Prototyp i canvas: visar UX-flöde. I riktig app kopplas detta till Next.js pages + backend-API.
+          
         </p>
       </footer>
     </div>

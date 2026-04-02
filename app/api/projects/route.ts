@@ -13,7 +13,7 @@ export async function GET(request: Request) {
             return NextResponse.json({ message: "ownerId saknas"}, { status: 400 });
         }
 
-        const projects = await Project.find({ ownerId });
+        const projects = await Project.find({ ownerId }).sort({ createdAt: -1 });
         return NextResponse.json(projects);
     } catch (error) {
         console.error("Database Error:", error);
@@ -25,7 +25,8 @@ export async function POST(request: Request) {
     try {
         await connectDB();
         const body = await request.json();
-        const { name, description, ownerId} = body;
+
+        const { name, description, ownerId, initialSchema} = body;
 
         if (!name || !ownerId) {
             return NextResponse.json({ message: "Namn och ownerId krävs" }, { status: 400 });
@@ -35,6 +36,7 @@ export async function POST(request: Request) {
             name,
             description,
             ownerId,
+            initialSchema: initialSchema || {},
         });
 
         return NextResponse.json(newProject, { status: 201 });

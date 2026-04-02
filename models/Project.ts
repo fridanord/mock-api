@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, models } from "mongoose";
+import { Schema, model, models } from "mongoose";
 import crypto from "crypto";
 
 const ProjectSchema = new Schema(
@@ -23,10 +23,14 @@ const ProjectSchema = new Schema(
         description: {
             type: String,
             default: ""
+        },
+        initialSchema: {
+            type: Schema.Types.Mixed,
+            default: {}
         }
     },
     {
-        timestamps: true // createdAt och updated at?
+        timestamps: true 
     }
 );
 
