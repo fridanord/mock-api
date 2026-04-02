@@ -61,18 +61,23 @@ export default function ScenarioPickerCard({
     onCreateEndpoint,
     onCreateScenario,
 }: ScenarioPickerCardProps) {
+    // UI state for which popover is open and which items are selected.
+    // The selected ids drive the derived active endpoint and scenario below.
     const [isEndpointOpen, setIsEndpointOpen] = useState(false);
     const [isScenarioOpen, setIsScenarioOpen] = useState(false);
     const [selectedEndpointId, setSelectedEndpointId] = useState(endpoints[0]?.id ?? "");
     const [selectedScenarioId, setSelectedScenarioId] = useState(
         endpoints[0]?.scenarios[0]?.id ?? ""
     );
-
+    // Refs let us measure the trigger buttons and detect outside clicks
+    // against both the triggers and the portal-rendered popovers.
     const endpointTriggerRef = useRef<HTMLButtonElement | null>(null);
     const scenarioTriggerRef = useRef<HTMLButtonElement | null>(null);
     const endpointPopoverRef = useRef<HTMLDivElement | null>(null);
     const scenarioPopoverRef = useRef<HTMLDivElement | null>(null);
 
+    // Resolve the currently active objects from the selected ids.
+    // If the ids are stale or missing, fall back to the first available item.
     const activeEndpoint = useMemo(
         () => endpoints.find((endpoint) => endpoint.id === selectedEndpointId) ?? endpoints[0],
         [endpoints, selectedEndpointId]
@@ -90,6 +95,8 @@ export default function ScenarioPickerCard({
     const [endpointPosition, setEndpointPosition] = useState<PopoverPosition | null>(null);
     const [scenarioPosition, setScenarioPosition] = useState<PopoverPosition | null>(null);
 
+    // When a popover opens, measure its trigger and keep the popover position
+    // in sync with viewport changes like resize and scroll.
     useEffect(() => {
         if (!isEndpointOpen) return;
 
@@ -108,6 +115,7 @@ export default function ScenarioPickerCard({
         };
     }, [isEndpointOpen]);
 
+    // Same positioning logic for the scenario popover.
     useEffect(() => {
         if (!isScenarioOpen) return;
 
@@ -126,6 +134,9 @@ export default function ScenarioPickerCard({
         };
     }, [isScenarioOpen]);
 
+
+    // Close either popover when the user clicks outside both triggers/popovers
+    // or presses Escape.
     useEffect(() => {
         if (!isEndpointOpen && !isScenarioOpen) return;
 
@@ -387,6 +398,9 @@ export default function ScenarioPickerCard({
     );
 }
 
+// Render the popover into document.body so it can escape parent overflow
+// and be positioned relative to the viewport instead of the card layout.
+// This is achieved using a React portal
 function PopoverMenu({
     open,
     position,
@@ -427,6 +441,8 @@ function PopoverMenu({
     );
 }
 
+// Measure the trigger in viewport space and decide whether the popover
+// should open below or above it based on available vertical space.
 function getPopoverPosition(trigger: HTMLElement): PopoverPosition {
     const rect = trigger.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
