@@ -15,6 +15,7 @@ export default function NewProjectPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [isValidJson, setIsValidJson] = useState(true);
 
+    /* Realtidsvalidering av JSON, försöker parsa innehållet varje gång användaren skriver.*/
     useEffect(() => {
         try {
             JSON.parse(jsonContent);
@@ -24,6 +25,7 @@ export default function NewProjectPage() {
         }
     }, [jsonContent]);
 
+    /* Skapa nytt projekt via POST, skickar data till /api/projects och inkluderar användarens ID som ägare. */
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!isValidJson) return;
@@ -38,7 +40,7 @@ export default function NewProjectPage() {
                     name,
                     description,
                     ownerId: userId,
-                    initialSchema: JSON.parse(jsonContent),
+                    initialSchema: JSON.parse(jsonContent), // Sparar JSON som ett objekt i DB
                 }),
             });
 
@@ -135,7 +137,7 @@ export default function NewProjectPage() {
                         </div>
                     </div>
 
-                    <div className="card-base flex flex-col h-[650px] overflow-hidden">
+                    <div className="card-base flex flex-col h-650px overflow-hidden">
                         <div className="px-8 py-4 border-b border-grey-91 flex justify-between items-center bg-white">
                             <h2 className="text-azure-11 text-lg font-bold">Schema Definition</h2>
                             <span className={`status-badge ${isValidJson ? 'status-valid' : 'status-invalid'} text-[10px] uppercase font-bold tracking-widest px-4 py-1.5`}>
@@ -144,7 +146,7 @@ export default function NewProjectPage() {
                         </div>
 
                         <textarea
-                          className="flex-grow p-10 font-mono text-sm outline-none resize-none bg-white text-azure-17 leading-relaxed"
+                          className="grow p-10 font-mono text-sm outline-none resize-none bg-white text-azure-17 leading-relaxed"
                           value={jsonContent}
                           onChange={(e) => setJsonContent(e.target.value)}
                           spellCheck={false}

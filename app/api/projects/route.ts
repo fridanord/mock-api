@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongoose";
 import Project from "@/models/Project";
 
+/* GET -> Hämtar alla projekt för en specifik användare, ex: /api/projects?owner=123 */
 export async function GET(request: Request) {
     try {
         await connectDB();
@@ -21,6 +22,7 @@ export async function GET(request: Request) {
     }
 }
 
+/* POST, förväntar sig name, ownerId och valfri description/initialSchema */
 export async function POST(request: Request) {
     try {
         await connectDB();
@@ -28,10 +30,12 @@ export async function POST(request: Request) {
 
         const { name, description, ownerId, initialSchema} = body;
 
+        // Validering för att säkerhetsställa att vi har det viktigaste.
         if (!name || !ownerId) {
             return NextResponse.json({ message: "Namn och ownerId krävs" }, { status: 400 });
         }
 
+        // Skapar dokumentet i DB, Api-nyckel genereras automatiskt av modellen
         const newProject = await Project.create({
             name,
             description,

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongoose";
 import Project from "@/models/Project";
 
+/* GET, används för att förhandsifylla formuläret på edit sidan */
 export async function GET(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
@@ -28,6 +29,7 @@ export async function GET(
     }
 }
 
+/* PUT -> tar emot id från url:en och ny data.*/
 export async function PUT(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
@@ -37,6 +39,7 @@ export async function PUT(
         const { id } = await params;
         const body = await request.json();
 
+        /* Uppdaterar dokumentet och returnerar den nya versionen */
         const updatedProject = await Project.findByIdAndUpdate(
             id,
             { $set: body },

@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -17,6 +16,8 @@ export default function EditProjectPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [isValidJson, setIsValidJson] = useState(true);
 
+    /* Hämtar befintligt projektdata baserat på ID i url:en, 
+    strängdefinerar initialSchema för att kunna visa det i en textarea */
     useEffect(() => {
         const fetchProject = async () => {
             if (!id) return;
@@ -40,6 +41,7 @@ export default function EditProjectPage() {
         fetchProject();
     }, [id]);
 
+    /* Realtidsvalidering av JSON-input, hindrar att vi skickar korrupt data till databasen */
     useEffect(() => {
         if (!jsonContent || jsonContent.trim() === "") {
             setIsValidJson(true);
@@ -53,6 +55,7 @@ export default function EditProjectPage() {
         }
     }, [jsonContent]);
 
+    /* Uppdaterar projektet via PUT-anrop, parsar tillbaka JSON-strängen till ett objekt innan vi sparar */
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
         
