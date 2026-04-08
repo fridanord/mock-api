@@ -4,6 +4,7 @@ import { EndpointEditButton } from "./EndpointsButtons";
 import { useState } from "react";
 import { Copy, Check, Trash2 } from "lucide-react";
 import Link from "next/link";
+import DeleteModal from "./DeleteModal";
 
 interface ProjectCardProps {
     project: {
@@ -16,6 +17,7 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project }: ProjectCardProps) {
     const [copied, setCopied] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const router = useRouter();
 
     const copyToClipboard = () => {
@@ -24,25 +26,21 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const handleDelete = async () => {
-        const confirmed = window.confirm(`Är du säker på att du vill radera "${project.name}"?`);
+    const handleDeleteConfirm = async () => {
+        try {
+            const res = await fetch(`/api/projects/${project._id}`, {
+                method: "DELETE",
+            });
 
-        if (confirmed) {
-            try {
-                const res = await fetch(`/api/projects/${project._id}`, {
-                    method: "DELETE",
-                });
-
-                if (res.ok) {
-                    window.location.reload();
-                } else {
-                    alert("Kunde inte radera projektet");
-                }
-            } catch (error) {
-                console.error("Delete error:", error);
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                alert("Kunde inte radera projektet");
             }
+        } catch (error) {
+            console.error("Delete error:", error);
         }
-    };
+    }
 
     return (
         <div className="card-base p-8 mb-6 relative group hover:border-azure-65 transition-all">
@@ -79,13 +77,21 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 />
 
                 <button
-                   onClick={handleDelete}
+                   onClick={() => setIsDeleteModalOpen(true)}
                    className="btn-delete"
                    title="Radera projekt"
                 >
                     <Trash2 size={18} />
                 </button>
             </div>
+
+            <DeleteModal
+               isOpen={isDeleteModalOpen}
+               onClose={() => setIsDeleteModalOpen(false)}
+               onConfirm={handleDeleteConfirm}
+               title="Radera projektet?"
+               description={`Är du säker på att du vill radera "${project.name}"? All data kommer att tas bort permanent.`}
+            />
         </div>
     );
 }
