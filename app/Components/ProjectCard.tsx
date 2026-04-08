@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { EndpointEditButton } from "./EndpointsButtons";
 import { useState } from "react";
-import { Copy, Check, ExternalLink } from "lucide-react";
+import { Copy, Check, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 interface ProjectCardProps {
@@ -22,6 +22,26 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         navigator.clipboard.writeText(project.apiKey);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+    };
+
+    const handleDelete = async () => {
+        const confirmed = window.confirm(`Är du säker på att du vill radera "${project.name}"?`);
+
+        if (confirmed) {
+            try {
+                const res = await fetch(`/api/projects/${project._id}`, {
+                    method: "DELETE",
+                });
+
+                if (res.ok) {
+                    window.location.reload();
+                } else {
+                    alert("Kunde inte radera projektet");
+                }
+            } catch (error) {
+                console.error("Delete error:", error);
+            }
+        }
     };
 
     return (
@@ -56,7 +76,15 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
                 <EndpointEditButton
                    onClick={() => router.push(`/start/projects/${project._id}/edit`)}
-                   />
+                />
+
+                <button
+                   onClick={handleDelete}
+                   className="btn-delete"
+                   title="Radera projekt"
+                >
+                    <Trash2 size={18} />
+                </button>
             </div>
         </div>
     );
