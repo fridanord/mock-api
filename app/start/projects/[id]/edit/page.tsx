@@ -159,7 +159,7 @@ export default function EditProjectPage() {
                             />
                         </div>
 
-                        <div className="info-box italic flex gap-3 p-4 bg-blue-50/30 rounded-lg">
+                        <div className="info-box flex gap-3 p-4">
                             <span className="text-blue-59 font-bold italic">i</span>
                             <p className="text-[11px] leading-relaxed text-azure-34">
                                 Tip: You can paste a JSON object directly into the definition panel on the right.

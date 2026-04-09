@@ -67,8 +67,8 @@ export default function NewProjectPage() {
                         >
                             <ArrowLeft size={16} /> Tillbaka
                         </button>
-                        <h1 className="text-azure-11 text-3xl font-bold">Redigera schema</h1>
-                        <p className="text-azure-34 text-sm mt-1 italic font-medium">Projekt: {name || "Webshop API"}</p>
+                        <h1 className="text-azure-11 text-3xl font-bold">Skapa schema</h1>
+                        <p className="text-azure-34 text-sm mt-1 italic font-medium">Projekt: {name || "Tex: Webshop API"}</p>
                     </div>
                     <div className="flex gap-4">
                         <button
@@ -128,7 +128,7 @@ export default function NewProjectPage() {
                             />
                         </div>
 
-                        <div className="info-box italic">
+                        <div className="info-box">
                             <span className="text-blue-59 font-bold">i</span>
                             <p className="text-[11px] leading-relaxed">
                                 Tip: You can paste a JSON object directly into the definition panel on the right.
