@@ -2,6 +2,7 @@
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
+import AuthSpinner from "./AuthSpinner";
 type Mode = "login" | "register";
 type AuthFormValues = { mode: Mode; email: string; password: string };
 type LogRegComponentProps = { mode: Mode; onSubmit?: (values: AuthFormValues) => void };
@@ -14,6 +15,8 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
 
     // function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     //     e.preventDefault();
@@ -25,6 +28,7 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
 async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
  setError("");
+ setLoading(true);
     if (mode === "register") {
         try {
             const response = await fetch("/api/register", {
@@ -42,16 +46,19 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 
             if (!response.ok) {
                 alert(data.message || "Kunde inte registrera användaren.");
+               setLoading(false);
                 return;
             }
 
             alert("Konto skapat! Du kan nu logga in.");
+            setLoading(false);
+            return;
         } catch (error) {
             console.error(error);
             alert("Något gick fel vid registrering.");
+            setLoading(false);
+            return;
         }
-
-        return;
     }
 
     // if (mode === "login") {
@@ -69,12 +76,15 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 
 if (result?.error) {
   setError("Fel email eller lösenord");
+  setLoading(false);
   return;
 }
 
 if (result?.ok) {
   window.location.href = "/start";
+  return;
 }
+setLoading(false);
 }
 
 
@@ -171,14 +181,16 @@ if (result?.ok) {
   </div>
 )}
 
-                     <button type="submit" className="btn-primary w-full justify-center">
-            {buttonText}
+                     <button type="submit" disabled={loading} className="btn-primary w-full justify-center  disabled:cursor-not-allowed disabled:opacity-70">
+            {/* {buttonText} */}
+             {loading ? <AuthSpinner /> : buttonText}
           </button>
 
                     <button
             type="button"
+            disabled={loading}
             onClick={() => signIn("google", { callbackUrl: "/start" })}
-            className="btn-secondary w-full justify-center"
+            className="btn-secondary w-full justify-center disabled:cursor-not-allowed disabled:opacity-70"
           >
             Login with Google
           </button>
