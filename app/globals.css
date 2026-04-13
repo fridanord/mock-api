@@ -16,13 +16,14 @@
   --color-grey-97: #EEF2FF;
   --color-grey-93: #DCFCE7;
 
-   /* AZURE / EBONY */
+  /* AZURE / EBONY */
   --color-azure-11: #111827;
   --color-azure-65: #9CA3AF;
   --color-azure-34: #4B5563;
   --color-azure-27: #374151;
   --color-azure-17: #1F2937;
   --color-azure-84: #D1D5DB;
+
   /* BLUE */
   --color-blue-67: #6366F1;
   --color-blue-59: #4F46E5;
@@ -36,21 +37,25 @@
   --color-yellow-89: #FEF3C7;
   --color-orange-44: #D97706;
   --color-violet-65: #A855F7;
-/* SURFACE / TEXT */
+
+  /* SURFACE / TEXT */
   --color-surface: #FFFFFF;
   --color-surface-muted: #F9FAFB;
   --color-border: #E5E7EB;
   --color-text-main: #111827;
   --color-text-muted: #6B7280;
+
   /* BUTTON / STATUS */
   --color-button-primary: #111827;
   --color-button-hover: #1F2937;
   --color-valid: #16A34A;
   --color-invalid: #EF4444;
+
   /* RADII */
   --radius-button: 14px;
   --radius-card: 12px;
   --radius-input: 8px;
+
   /* FONTS */
   --font-sans: Inter, ui-sans-serif, system-ui;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -114,14 +119,13 @@
   --color-invalid: #F87171;
 }
 
-
 /*
   NOTE:
   If your setup complains about "Unknown at rule @theme",
   replace `@theme inline { ... }` with `:root { ... }`
   and keep the variables the same.
 */
-@theme inline { /* Här bor våra "rötter" */
+@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -134,7 +138,7 @@
   --color-grey-93: var(--color-grey-93);
 
   /* AZURE / EBONY */
- --color-azure-11: var(--color-azure-11);
+  --color-azure-11: var(--color-azure-11);
   --color-azure-65: var(--color-azure-65);
   --color-azure-34: var(--color-azure-34);
   --color-azure-27: var(--color-azure-27);
@@ -147,16 +151,15 @@
   --color-blue-34: var(--color-blue-34);
   --color-blue-89: var(--color-blue-89);
 
-
   /* STATUS & ACCENTS */
-   --color-red-60: var(--color-red-60);
+  --color-red-60: var(--color-red-60);
   --color-red-51: var(--color-red-51);
   --color-green-36: var(--color-green-36);
   --color-yellow-89: var(--color-yellow-89);
   --color-orange-44: var(--color-orange-44);
   --color-violet-65: var(--color-violet-65);
 
-   --color-surface: var(--color-surface);
+  --color-surface: var(--color-surface);
   --color-surface-muted: var(--color-surface-muted);
   --color-border: var(--color-border);
   --color-text-main: var(--color-text-main);
@@ -174,28 +177,6 @@
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-
-  /* --font-weight-bold: 700;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-normal: 400;
-
-  --font-size-h1: 1.875rem;
-  --font-size-h2: 1.5rem;
-  --font-size-h3: 1rem;
-  --font-size-base: 0.875rem;
-  --font-size-small: 0.8125rem;
-
-  --line-height-h1: 2.25rem;
-  --line-height-h2: 2rem;
-  --line-height-h3: 1.5rem;
-  --line-height-base: 1.25rem;
-
-  --color-button-primary: var(--color-azure-11);
-  --color-button-hover: var(--color-azure-17);
-
-  --color-valid: var(--color-green-36);
-  --color-invalid: var(--color-red-60); */
 }
 
 /* DARK MODE (disabled)
@@ -259,10 +240,7 @@
   }
 }
 
-/* @layer components kan vi specifiera komponent design för bättre läsbarhet och mindre kod,
-   våra egna "design system" - klasser.
-   Gör att vi slipper skriva långa tailwind-klasser varje gång
-   och vi får ett enhetligt utseende på hela sajten */
+/* @layer components kan vi specificera komponentdesign för bättre läsbarhet och mindre kod */
 
 @layer components {
   .btn-primary {
@@ -270,25 +248,28 @@
     background: var(--color-button-primary);
     color: var(--background);
   }
-.btn-primary:hover {
+
+  .btn-primary:hover {
     background: var(--color-button-hover);
   }
 
-
- .btn-secondary {
+  .btn-secondary {
     @apply rounded-card px-6 py-2.5 font-medium transition-colors flex items-center gap-2;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     color: var(--color-text-main);
   }
-.btn-secondary:hover {
+
+  .btn-secondary:hover {
     background: var(--color-surface-muted);
   }
+
   .btn-delete {
     @apply rounded-input p-2 transition-colors flex items-center justify-center text-white;
     background: var(--color-red-60);
   }
-.btn-delete:hover {
+
+  .btn-delete:hover {
     background: var(--color-red-51);
   }
 
@@ -296,49 +277,56 @@
     @apply flex items-center gap-2 font-medium transition-colors text-sm;
     color: var(--color-azure-34);
   }
-.btn-ghost:hover {
+
+  .btn-ghost:hover {
     color: var(--color-azure-11);
   }
+
   .btn-edit {
     @apply rounded-input px-3 py-1 text-xs font-medium transition-colors;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     color: var(--color-text-main);
   }
-.btn-edit:hover {
+
+  .btn-edit:hover {
     background: var(--color-surface-muted);
   }
 
   .btn-test {
-  @apply rounded-input px-3 py-1 text-xs font-medium flex items-center gap-1.5 transition-colors;
-  background: var(--color-azure-11);
-  color: var(--background);
-}
+    @apply rounded-input px-3 py-1 text-xs font-medium flex items-center gap-1.5 transition-colors;
+    background: var(--color-azure-11);
+    color: var(--background);
+  }
 
-.btn-test:hover {
-  background: var(--color-azure-17);
-}
+  .btn-test:hover {
+    background: var(--color-azure-17);
+  }
 
- .card-base {
+  .card-base {
     @apply rounded-card shadow-sm overflow-hidden;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
   }
- .card-footer {
+
+  .card-footer {
     @apply p-3 text-center text-[10px] font-bold uppercase tracking-wider;
     background: var(--color-surface-muted);
     border-top: 1px solid var(--color-border);
     color: var(--color-text-muted);
   }
+
   .input-base {
     @apply rounded-input p-2 outline-none transition-all;
     background: var(--color-surface-muted);
     border: 1px solid var(--color-border);
     color: var(--color-text-main);
   }
+
   .input-base:focus {
     border-color: var(--color-blue-59);
   }
+
   .info-box {
     @apply rounded-card p-4 flex items-center gap-3;
     background: var(--color-grey-97);
@@ -349,7 +337,6 @@
   .status-badge {
     @apply px-3 py-1 rounded-full text-xs font-mono font-medium;
   }
-
 
   .status-valid {
     @apply bg-grey-97;
@@ -374,14 +361,24 @@
   .badge-get {
     @apply bg-blue-89 text-blue-34;
   }
+
   .badge-post {
     @apply bg-grey-93 text-green-36;
   }
+
   .badge-put {
     @apply bg-yellow-89 text-orange-44;
   }
 
-   .list-badge {
+  .badge-patch {
+    @apply bg-yellow-89 text-orange-44;
+  }
+
+  .badge-delete {
+    @apply bg-red-100 text-red-600;
+  }
+
+  .list-badge {
     @apply px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
