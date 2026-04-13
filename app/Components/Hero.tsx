@@ -59,7 +59,8 @@ function Modal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg px-2 py-1 text-sm text-azure-65 hover:bg-grey-98"
+              // className="rounded-lg px-2 py-1 text-sm text-azure-65 hover:bg-grey-98"
+              className="rounded-lg px-2 py-1 text-sm text-[var(--color-text-muted)] hover:bg-[var(--color-surface-muted)]"
               aria-label="Close"
               title="Close"
             >
@@ -134,7 +135,8 @@ export default function Hero() {
               </div>
             </div>
 
-            <div className="rounded-card border border-grey-91 bg-grey-98 p-5">
+            {/* <div className="rounded-card border border-grey-91 bg-grey-98 p-5"> */}
+            <div className="rounded-card border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-5">
               <div className="text-xs font-semibold uppercase tracking-wide text-azure-65">
                 Kom igång
               </div>
@@ -147,7 +149,8 @@ export default function Hero() {
               </ol>
 
               {session?.user && (
-                <div className="mt-5 rounded-xl border border-grey-91 bg-white p-4">
+                // <div className="mt-5 rounded-xl border border-grey-91 bg-white p-4">
+                <div className="mt-5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
                   <div className="text-xs text-azure-65">Inloggad användare</div>
                   <div className="mt-2 text-sm text-azure-11">
                     {session.user.name ?? session.user.email}

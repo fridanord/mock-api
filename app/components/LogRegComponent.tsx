@@ -2,6 +2,7 @@
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
+import AuthSpinner from "./AuthSpinner";
 type Mode = "login" | "register";
 type AuthFormValues = { mode: Mode; email: string; password: string };
 type LogRegComponentProps = { mode: Mode; onSubmit?: (values: AuthFormValues) => void };
@@ -13,6 +14,9 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
 
     // function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     //     e.preventDefault();
@@ -23,7 +27,8 @@ export default function LogRegComponent({ mode, onSubmit }: LogRegComponentProps
 
 async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
+ setError("");
+ setLoading(true);
     if (mode === "register") {
         try {
             const response = await fetch("/api/register", {
@@ -41,25 +46,45 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 
             if (!response.ok) {
                 alert(data.message || "Kunde inte registrera användaren.");
+               setLoading(false);
                 return;
             }
 
             alert("Konto skapat! Du kan nu logga in.");
+            setLoading(false);
+            return;
         } catch (error) {
             console.error(error);
             alert("Något gick fel vid registrering.");
+            setLoading(false);
+            return;
         }
-
-        return;
     }
 
-    if (mode === "login") {
-        await signIn("credentials", {
-            email,
-            password,
-            callbackUrl: "/start",
-        });
-    }
+    // if (mode === "login") {
+    //     await signIn("credentials", {
+    //         email,
+    //         password,
+    //         callbackUrl: "/start",
+    //     });
+    // }
+    const result = await signIn("credentials", {
+  email,
+  password,
+  redirect: false,
+});
+
+if (result?.error) {
+  setError("Fel email eller lösenord");
+  setLoading(false);
+  return;
+}
+
+if (result?.ok) {
+  window.location.href = "/start";
+  return;
+}
+setLoading(false);
 }
 
 
@@ -71,17 +96,18 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 
     return (
         <section className="w-full max-w-md mt-16">
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">
-                <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
+           <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-lg">
+                <h1 className="text-2xl font-semibold text-[var(--color-text-main)]">{title}</h1>
 
-                <div className="mt-4 rounded-xl bg-gray-100 p-1">
+                <div className="mt-4 rounded-xl bg-[var(--color-surface-muted)] p-1 border border-[var(--color-border)]">
                     <div className="relative grid grid-cols-2 gap-1">
                         <span
                             aria-hidden="true"
                             className={[
-                                "pointer-events-none absolute inset-y-0 left-0 z-0 w-1/2 rounded-lg bg-white shadow-sm",
-                                "transform transition-transform duration-300 ease-out",
-                                isLogin ? "translate-x-0" : "translate-x-full",
+                               "pointer-events-none absolute inset-y-0 left-0 z-0 w-1/2 rounded-lg shadow-sm",
+                "transform transition-transform duration-300 ease-out",
+                "bg-[var(--color-surface)] border border-[var(--color-border)]",
+                isLogin ? "translate-x-0" : "translate-x-full",
                             ].join(" ")}
                         />
 
@@ -89,11 +115,13 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
                             href="/start/login"
                             aria-current={isLogin ? "page" : undefined}
                             className={[
-                                "relative z-10 rounded-lg px-3 py-2 text-center text-sm font-medium",
-                                "transition-colors transition-discrete duration-300",
-                                isLogin ? "text-gray-900" : "text-gray-600",
+                               "relative z-10 rounded-lg px-3 py-2 text-center text-sm font-medium transition-colors duration-300",
+                isLogin
+                  ? "text-[var(--color-text-main)]"
+                  : "text-[var(--color-text-muted)]",
                             ].join(" ")}
                         >
+                            
                             Logga in
                         </Link>
 
@@ -101,9 +129,10 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
                             href="/start/register"
                             aria-current={!isLogin ? "page" : undefined}
                             className={[
-                                "relative z-10 rounded-lg px-3 py-2 text-center text-sm font-medium",
-                                "transition-colors transition-discrete duration-300",
-                                !isLogin ? "text-gray-900" : "text-gray-600",
+                                 "relative z-10 rounded-lg px-3 py-2 text-center text-sm font-medium transition-colors duration-300",
+                !isLogin
+                  ? "text-[var(--color-text-main)]"
+                  : "text-[var(--color-text-muted)]",
                             ].join(" ")}
                         >
                             Skapa konto
@@ -113,7 +142,7 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 
                 <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                     <div className="space-y-1">
-                        <label className="text-sm font-medium text-gray-700">Email</label>
+                        <label className="text-sm font-medium text-[var(--color-text-main)]">Email</label>
                         <input
                             id="email"
                             name="email"
@@ -123,13 +152,15 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
                             type="email"
                             placeholder="student@example.com"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-300 text-neutral-800"
+                            onChange={(e) => {setEmail(e.target.value);
+                                setError("");
+                            }}
+                            className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm outline-none placeholder:text-[var(--color-text-muted)] text-[var(--color-text-main)] focus:ring-2 focus:ring-[var(--color-blue-59)]/20"
                         />
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-sm font-medium text-gray-700">Lösenord</label>
+                        <label className="text-sm font-medium  text-[var(--color-text-main)]">Lösenord</label>
                         <input
                             id="password"
                             name="password"
@@ -138,27 +169,33 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
                             required
                             placeholder="password123"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gray-900/10 placeholder:text-gray-300 text-neutral-800"
-                        />
+                            onChange={(e) => {setPassword(e.target.value);
+                                setError("");
+                            }}
+                           className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm outline-none placeholder:text-[var(--color-text-muted)] text-[var(--color-text-main)] focus:ring-2 focus:ring-[var(--color-blue-59)]/20"
+            />
                     </div>
+                    {error && (
+  <div className="status-invalid status-badge mt-2">
+    {error}
+  </div>
+)}
+
+                     <button type="submit" disabled={loading} className="btn-primary w-full justify-center  disabled:cursor-not-allowed disabled:opacity-70">
+            {/* {buttonText} */}
+             {loading ? <AuthSpinner /> : buttonText}
+          </button>
 
                     <button
-                        type="submit"
-                        className="w-full rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white"
-                    >
-                        {buttonText}
-                    </button>
+            type="button"
+            disabled={loading}
+            onClick={() => signIn("google", { callbackUrl: "/start" })}
+            className="btn-secondary w-full justify-center disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            Login with Google
+          </button>
 
-                    <button
-                        type="button"
-                        onClick={() => signIn("google", { callbackUrl: "/start" })}
-                        className="w-full rounded-xl bg-slate-950 px-4 py-3 text-sm font-medium text-white hover:bg-slate-900"
-                    >
-                        Login with Google
-                    </button>
-
-                    <p className="pt-2 text-xs text-gray-500">
+                    <p className="pt-2 text-xs text-[var(--color-text-muted)]">
                         I slutgiltiga: Använder OAuth lösenord hash:as + sparas i DB och login ger JWT.
                     </p>
                 </form>
