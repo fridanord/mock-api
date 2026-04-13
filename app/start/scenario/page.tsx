@@ -1,3 +1,8 @@
+import { authOptions } from "@/lib/authOptions";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+
+
 
 import type { EndpointSummary } from "@/app/Components/Mocktypes/mocktypes";
 import { mockEndpoints } from "@/app/Components/Mocktypes/mockData";
@@ -5,7 +10,12 @@ import ScenarioNewPicker from "@/app/Components/ScenarioPickerCard";
 import ScenarioPickerCard from "@/app/Components/ScenarioPickerCard";
 
 
-export default function ScenarioPage() {
+export default async function ScenarioPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/start/login");
+  }
   return (
     <div className="h-full w-full overflow-y-auto p-8">
       <div className="max-w-5xl flex flex-col gap-6">

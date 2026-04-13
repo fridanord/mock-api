@@ -5,7 +5,9 @@ import { useState } from "react";
 import EndpointForm from "./EndpointForm";
 import JsonPreview from "./JsonPreview";
 
-export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+const PROJECT_ID = "69bbd7e8257df51484ad3002";
 
 export default function EndpointEditor() {
   const [method, setMethod] = useState<HttpMethod>("GET");
@@ -43,6 +45,8 @@ export default function EndpointEditor() {
       return;
     }
 
+    const endpointName = `${method} ${path}`;
+
     try {
       setIsSaving(true);
 
@@ -52,9 +56,14 @@ export default function EndpointEditor() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          name: endpointName,
+          projectId: PROJECT_ID,
           method,
           path,
+          requestBody: null,
           responseBody: parsedJson,
+          generateList: Array.isArray(parsedJson),
+          listCount: Array.isArray(parsedJson) ? parsedJson.length : 0,
         }),
       });
 
@@ -64,7 +73,7 @@ export default function EndpointEditor() {
         throw new Error(data.message || "Kunde inte spara endpoint.");
       }
 
-      setSuccess("Endpoint sparades.");
+      setSuccess("Endpoint sparades i databasen.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Nagot gick fel.");
     } finally {
@@ -75,15 +84,25 @@ export default function EndpointEditor() {
   let previewData: unknown;
 
   try {
+    const parsed = JSON.parse(responseBody);
+
     previewData = {
+      name: `${method} ${path}`,
+      projectId: PROJECT_ID,
       method,
       path,
-      responseBody: JSON.parse(responseBody),
+      requestBody: null,
+      responseBody: parsed,
+      generateList: Array.isArray(parsed),
+      listCount: Array.isArray(parsed) ? parsed.length : 0,
     };
   } catch {
     previewData = {
+      name: `${method} ${path}`,
+      projectId: PROJECT_ID,
       method,
       path,
+      requestBody: null,
       responseBody,
     };
   }
