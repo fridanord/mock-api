@@ -64,3 +64,33 @@ export async function PUT(
         return NextResponse.json({ message: "Kunde inte uppdatera endpoint." }, { status: 500 });
     }
 }
+export async function DELETE(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    try {
+        await connectDB();
+        const { id } = await params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return NextResponse.json({ message: "Ogiltigt endpoint-id." }, { status: 400 });
+        }
+
+        const deleted = await Endpoint.findByIdAndDelete(id);
+
+        if (!deleted) {
+            return NextResponse.json({ message: "Endpoint hittades inte." }, { status: 404 });
+        }
+
+        return NextResponse.json(
+            { message: "Endpoint raderad.", id },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error("DELETE /api/endpoints/[id] error:", error);
+        return NextResponse.json(
+            { message: "Kunde inte radera endpoint." },
+            { status: 500 }
+        );
+    }
+}
