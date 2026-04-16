@@ -50,3 +50,38 @@ export async function GET(req: Request) {
     );
   }
 }
+
+export async function PATCH(req: Request) {
+  try {
+    await connectDB();
+    const body = await req.json();
+    const { scenarioId, endpointId } = body;
+
+    if (!scenarioId || !endpointId) {
+      return NextResponse.json(
+        { message: "Både scenarioId och endpointId krävs." },
+        { status: 400 }
+      );
+    }
+
+    
+    await Scenario.updateMany(
+      { endpointId: endpointId },
+      { isActive: false }
+    );
+
+    
+    const updatedScenario = await Scenario.findByIdAndUpdate(
+      scenarioId,
+      { isActive: true },
+      { new: true } 
+    );
+
+    return NextResponse.json(updatedScenario, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: "Kunde inte uppdatera scenario.", error: error.message },
+      { status: 500 }
+    );
+  }
+}
