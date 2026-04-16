@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EndpointForm from "./EndpointForm";
 import JsonPreview from "./JsonPreview";
 
@@ -9,7 +9,18 @@ export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 const PROJECT_ID = "69bbd7e8257df51484ad3002";
 
-export default function EndpointEditor() {
+type EndpointEditorProps = {
+  endpointId?: string;
+};
+
+type EndpointFromApi = {
+  _id: string;
+  method: HttpMethod;
+  path: string;
+  responseBody: unknown;
+};
+
+export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
   const [method, setMethod] = useState<HttpMethod>("GET");
   const [path, setPath] = useState("/users");
   const [responseBody, setResponseBody] = useState(`{
@@ -21,6 +32,37 @@ export default function EndpointEditor() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (!endpointId) return;
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        setError("");
+        setSuccess("");
+
+        const res = await fetch(`/api/endpoints/${endpointId}`);
+        const data: EndpointFromApi = await res.json();
+
+        if (!res.ok) throw new Error((data as any)?.message || "Kunde inte hämta endpoint.");
+
+        if (cancelled) return;
+
+        setMethod(data.method);
+        setPath(data.path);
+        setResponseBody(JSON.stringify(data.responseBody, null, 2));
+      } catch (e) {
+        if (cancelled) return;
+        setError(e instanceof Error ? e.message : "Något gick fel.");
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [endpointId]);
 
   const handleSave = async () => {
     setError("");
@@ -50,12 +92,14 @@ export default function EndpointEditor() {
     try {
       setIsSaving(true);
 
-      const response = await fetch("/api/endpoints", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const url = endpointId ? `/api/endpoints/${endpointId}` : "/api/endpoints";
+      const httpMethod = endpointId ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method: httpMethod,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          // for PUT: your API ignores fields it doesn't allow updating, so this is OK
           name: endpointName,
           projectId: PROJECT_ID,
           method,
