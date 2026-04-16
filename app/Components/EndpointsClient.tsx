@@ -115,7 +115,7 @@ export default function EndpointsClient() {
           <EndpointListContainer
             endpoints={endpoints}
             onEdit={(endpoint) =>
-              router.push(`/start/endpoints/edit?id=${endpoint.id}`)
+              router.push(`/start/endpoints/${endpoint.id}/edit`)
             }
             onTest={(endpoint) => {
               console.log("Test endpoint:", endpoint);

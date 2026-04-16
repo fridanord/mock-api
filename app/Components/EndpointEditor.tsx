@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import EndpointForm from "./EndpointForm";
 import JsonPreview from "./JsonPreview";
+import { set } from "mongoose";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -46,7 +47,7 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
         const res = await fetch(`/api/endpoints/${endpointId}`);
         const data: EndpointFromApi = await res.json();
 
-        if (!res.ok) throw new Error((data as any)?.message || "Kunde inte hämta endpoint.");
+        if (!res.ok) setError(data._id || "Kunde inte hämta endpoint.");
 
         if (cancelled) return;
 
@@ -99,7 +100,7 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
         method: httpMethod,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // for PUT: your API ignores fields it doesn't allow updating, so this is OK
+
           name: endpointName,
           projectId: PROJECT_ID,
           method,
