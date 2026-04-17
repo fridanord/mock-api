@@ -23,9 +23,11 @@ const ScenarioSchema = new Schema(
             type: Boolean,
             default: false
         },
-        endpointId: {
-            type: Schema.Types.ObjectId,
-            ref: "Endpoint",
+        endpointId: { // Felhantering: Ser om det fungerar, ändra tillbaka här sen.
+            //type: Schema.Types.ObjectId,
+            //ref: "Endpoint",
+            //required: true
+            type: String,
             required: true
         },
     },

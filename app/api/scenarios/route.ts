@@ -79,6 +79,7 @@ export async function PATCH(req: Request) {
 
     return NextResponse.json(updatedScenario, { status: 200 });
   } catch (error: any) {
+    console.error("DETALJERAT FEL:", error);
     return NextResponse.json(
       { message: "Kunde inte uppdatera scenario.", error: error.message },
       { status: 500 }

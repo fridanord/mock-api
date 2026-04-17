@@ -192,10 +192,29 @@ export default function ScenarioPickerCard({
         }
     };
 
-    const handleScenarioSelect = (scenario: ScenarioSummary) => {
+    const handleScenarioSelect = async (scenario: ScenarioSummary) => {
+        console.log("Är scenario-id rätt?", scenario.id);
+        console.log("Är endpoint-id rätt?", selectedEndpointId);
+        
         setSelectedScenarioId(scenario.id);
         setIsScenarioOpen(false);
         onScenarioChange?.(scenario);
+
+        try {
+            await fetch("/api/scenarios", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    scenarioId: scenario.id,
+                    endpointId: selectedEndpointId,
+                }),
+            });
+            console.log("Scenario aktiverat i databasen!");
+        } catch (error) {
+            console.error("Kunde inte aktivera scenario:", error);
+        }
     };
 
     if (!activeEndpoint) return null;
