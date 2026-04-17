@@ -65,6 +65,38 @@ export default function EndpointsClient() {
     fetchEndpoints();
   }, []);
 
+  const handleDelete = async (endpoint: FakeEndpoint) => {
+    const confirmed = window.confirm(
+      `Vill du radera endpointen ${endpoint.method} ${endpoint.path}?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setError("");
+
+      const response = await fetch(`/api/endpoints/${endpoint.id}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Kunde inte radera endpoint.");
+      }
+
+      setEndpoints((current) =>
+        current.filter((item) => item.id !== endpoint.id)
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Nagot gick fel vid radering."
+      );
+    }
+  };
+
   return (
     <div className="h-full w-full overflow-y-auto p-8">
       <div className="max-w-5xl flex flex-col gap-6">
@@ -115,13 +147,14 @@ export default function EndpointsClient() {
           <EndpointListContainer
             endpoints={endpoints}
             onEdit={(endpoint) =>
-              router.push(`/start/endpoints/edit?id=${endpoint.id}`)
+              router.push(`/start/endpoints/${endpoint.id}/edit`)
             }
             onTest={(endpoint) => {
               console.log("Test endpoint:", endpoint);
             }}
             onDelete={(endpoint) => {
-              console.log("Delete endpoint:", endpoint);
+              console.log("Deleted endpoint:", endpoint);
+              handleDelete(endpoint);
             }}
           />
         )}
