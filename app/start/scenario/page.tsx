@@ -1,7 +1,8 @@
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import ScenarioPickerCard from "@/app/Components/ScenarioPickerCard";
+//import ScenarioPickerCard from "@/app/Components/ScenarioPickerCard";
+import ScenarioWorkspace from "@/app/Components/ScenarioWorkspace";
 import Endpoint from "@/models/endpoint";
 import { connectDB } from "@/lib/mongoose";
 
@@ -77,9 +78,9 @@ export default async function ScenarioPage({
           </p>
         </div>
 
-        <div className="flex justify-center py-8">
+        <div className="py-8">
           {endpoints && endpoints.length > 0 ? (
-            <ScenarioPickerCard
+            <ScenarioWorkspace
               projectId={projectId}
               endpoints={endpoints}
               initialEndpointId={endpointId}
