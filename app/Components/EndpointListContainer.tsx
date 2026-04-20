@@ -18,21 +18,15 @@ export type FakeEndpoint = {
 };
 
 interface EndpointListContainerProps {
-    endpoints?: FakeEndpoint[];
+    endpoints: FakeEndpoint[];
     onEdit?: (endpoint: FakeEndpoint) => void;
     onTest?: (endpoint: FakeEndpoint) => void;
     onDelete?: (endpoint: FakeEndpoint) => void;
 }
 
-const fallbackEndpoints: FakeEndpoint[] = [
-    { id: "1", method: "GET", path: "/users", countLabel: "lista ×5" },
-    { id: "2", method: "POST", path: "/users" },
-    { id: "3", method: "GET", path: "/products", countLabel: "lista ×10" },
-    { id: "4", method: "GET", path: "/products/:id" },
-];
 
 export default function EndpointListContainer({
-    endpoints = fallbackEndpoints,
+    endpoints,
     onEdit,
     onTest,
     onDelete,
