@@ -1,12 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import EndpointListContainer, {
   FakeEndpoint,
 } from "@/app/Components/EndpointListContainer";
-
-const PROJECT_ID = "69bbd7e8257df51484ad3002";
 
 type EndpointFromApi = {
   _id: string;
@@ -22,18 +20,27 @@ type EndpointFromApi = {
 
 export default function EndpointsClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get("projectId") ?? "";
+
   const [endpoints, setEndpoints] = useState<FakeEndpoint[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchEndpoints = async () => {
+      if (!projectId) {
+        setError("ProjectId saknas i URL.");
+        setIsLoading(false);
+        return;
+      }
+
       try {
         setIsLoading(true);
         setError("");
 
         const response = await fetch(
-          `/api/endpoints?projectId=${PROJECT_ID}`
+          `/api/endpoints?projectId=${projectId}`
         );
 
         const data: EndpointFromApi[] = await response.json();
@@ -63,7 +70,7 @@ export default function EndpointsClient() {
     };
 
     fetchEndpoints();
-  }, []);
+  }, [projectId]);
 
   const handleDelete = async (endpoint: FakeEndpoint) => {
     const confirmed = window.confirm(
@@ -116,7 +123,10 @@ export default function EndpointsClient() {
             Kopiera Base URL
           </button>
 
-          <Link href="/start/endpoints/edit" className="btn-primary">
+          <Link
+            href={`/start/endpoints/edit?projectId=${projectId}`}
+            className="btn-primary"
+          >
             + Skapa endpoint
           </Link>
         </div>
@@ -147,10 +157,13 @@ export default function EndpointsClient() {
           <EndpointListContainer
             endpoints={endpoints}
             onEdit={(endpoint) =>
-              router.push(`/start/endpoints/${endpoint.id}/edit`)
+              router.push(`/start/endpoints/${endpoint.id}/edit?projectId=${projectId}`)
             }
             onTest={(endpoint) => {
-              console.log("Test endpoint:", endpoint);
+              router.push(
+                 `/start/scenario?projectId=${projectId}&endpointId=${endpoint.id}`
+              );
+              //console.log("Test endpoint:", endpoint);
             }}
             onDelete={(endpoint) => {
               console.log("Deleted endpoint:", endpoint);

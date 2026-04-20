@@ -20,16 +20,18 @@ export type ScenarioSummary = {
 };
 
 export type EndpointSummary = {
+    _id?: string;
     id: string;
     projectId: string;
     method: HttpMethod;
     path: string;
     description?: string;
-    scenarios: ScenarioSummary[];
 };
 
 type ScenarioPickerCardProps = {
+    projectId: string;
     endpoints: EndpointSummary[];
+    initialEndpointId?: string;
     onEndpointChange?: (endpoint: EndpointSummary) => void;
     onScenarioChange?: (scenario: ScenarioSummary) => void;
     onCreateEndpoint?: () => void;
@@ -55,7 +57,9 @@ const POPOVER_OFFSET = 12;
 const POPOVER_MIN_HEIGHT = 260;
 
 export default function ScenarioPickerCard({
+    projectId,
     endpoints,
+    initialEndpointId,
     onEndpointChange,
     onScenarioChange,
     onCreateEndpoint,
@@ -65,10 +69,12 @@ export default function ScenarioPickerCard({
     // The selected ids drive the derived active endpoint and scenario below.
     const [isEndpointOpen, setIsEndpointOpen] = useState(false);
     const [isScenarioOpen, setIsScenarioOpen] = useState(false);
-    const [selectedEndpointId, setSelectedEndpointId] = useState(endpoints[0]?.id ?? "");
-    const [selectedScenarioId, setSelectedScenarioId] = useState(
-        endpoints[0]?.scenarios[0]?.id ?? ""
+    const [selectedEndpointId, setSelectedEndpointId] = useState(
+        initialEndpointId || endpoints[0]?.id || ""
     );
+    const [selectedScenarioId, setSelectedScenarioId] = useState("");
+    const [scenarios, setScenarios] = useState<ScenarioSummary[]>([]);
+    
     // Refs let us measure the trigger buttons and detect outside clicks
     // against both the triggers and the portal-rendered popovers.
     const endpointTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -79,21 +85,85 @@ export default function ScenarioPickerCard({
     // Resolve the currently active objects from the selected ids.
     // If the ids are stale or missing, fall back to the first available item.
     const activeEndpoint = useMemo(
-        () => endpoints.find((endpoint) => endpoint.id === selectedEndpointId) ?? endpoints[0],
+        () => endpoints.find((endpoint) => 
+            (endpoint.id === selectedEndpointId) || ((endpoint as any)._id === selectedEndpointId)
+        ) ?? endpoints?.[0],
         [endpoints, selectedEndpointId]
     );
 
     const activeScenario = useMemo(() => {
-        if (!activeEndpoint) return undefined;
+        if (!scenarios.length) return undefined;
 
         return (
-            activeEndpoint.scenarios.find((scenario) => scenario.id === selectedScenarioId) ??
-            activeEndpoint.scenarios[0]
+            scenarios.find((scenario) => scenario.id === selectedScenarioId) ??
+            scenarios[0]
         );
-    }, [activeEndpoint, selectedScenarioId]);
+    }, [scenarios, selectedScenarioId]);
 
     const [endpointPosition, setEndpointPosition] = useState<PopoverPosition | null>(null);
     const [scenarioPosition, setScenarioPosition] = useState<PopoverPosition | null>(null);
+
+    useEffect(() => {
+        const endpointId = activeEndpoint?._id || activeEndpoint?.id;
+
+        if (!endpointId || !projectId) {
+            setScenarios([]);
+            setSelectedScenarioId("");
+            return;
+        }
+
+        const fetchScenarios = async () => {
+            try {
+                const res = await fetch(
+                    `/api/scenarios?projectId=${projectId}&endpointId=${endpointId}`
+                );
+
+                if (!res.ok) {
+                    setScenarios([]);
+                    setSelectedScenarioId("");
+                    return;
+                }
+
+                const data = await res.json();
+
+                const mappedScenarios: ScenarioSummary[] = data.map((scenario: any) => ({
+                    id: scenario._id,
+                    endpointId: typeof scenario.endpointId === "string"
+                    ? scenario.endpointId
+                    : scenario.endpointId?._id || "",
+                 name: scenario.name,
+                 response: {
+                     id: scenario._id,
+                     scenarioId: scenario._id,
+                     status: scenario.statusCode,
+                     bodyTemplate: scenario.responseBody,
+                 },
+                }));
+
+                setScenarios(mappedScenarios);
+
+                const activeFromDb = data.find((scenario: any) => scenario.isActive);
+                const firstScenarioId =
+                    activeFromDb?._id || mappedScenarios[0]?.id || "";
+
+                setSelectedScenarioId(firstScenarioId);
+
+                const selected =
+                   mappedScenarios.find((scenario) => scenario.id === firstScenarioId) ??
+                   mappedScenarios[0];
+
+                   if (selected) {
+                    onScenarioChange?.(selected);
+                   }
+            } catch (error) {
+                console.error("Kunde inte hämta scenarios:", error);
+                setScenarios([]);
+                setSelectedScenarioId("");
+            }
+        };
+
+        fetchScenarios();
+    }, [activeEndpoint, projectId, onScenarioChange]);
 
     // When a popover opens, measure its trigger and keep the popover position
     // in sync with viewport changes like resize and scroll.
@@ -178,18 +248,14 @@ export default function ScenarioPickerCard({
     }, [isEndpointOpen, isScenarioOpen]);
 
     const handleEndpointSelect = (endpoint: EndpointSummary) => {
-        const nextScenario = endpoint.scenarios[0];
+        const idToSet = (endpoint as any)._id || endpoint.id;
 
-        setSelectedEndpointId(endpoint.id);
-        setSelectedScenarioId(nextScenario?.id ?? "");
+        setSelectedEndpointId(idToSet);
+        setSelectedScenarioId("");
         setIsEndpointOpen(false);
         setIsScenarioOpen(false);
 
         onEndpointChange?.(endpoint);
-
-        if (nextScenario) {
-            onScenarioChange?.(nextScenario);
-        }
     };
 
     const handleScenarioSelect = async (scenario: ScenarioSummary) => {
@@ -209,6 +275,7 @@ export default function ScenarioPickerCard({
                 body: JSON.stringify({
                     scenarioId: scenario.id,
                     endpointId: selectedEndpointId,
+                    projectId,
                 }),
             });
             console.log("Scenario aktiverat i databasen!");
@@ -320,7 +387,7 @@ export default function ScenarioPickerCard({
 
                             return (
                                 <button
-                                    key={endpoint.id}
+                                    key={endpoint._id || endpoint.id}
                                     type="button"
                                     onClick={() => handleEndpointSelect(endpoint)}
                                     className={[
@@ -371,7 +438,7 @@ export default function ScenarioPickerCard({
                     </div>
 
                     <div className="p-3">
-                        {activeEndpoint.scenarios.map((scenario) => {
+                        {scenarios.map((scenario) => {
                             const isActive = scenario.id === activeScenario?.id;
 
                             return (

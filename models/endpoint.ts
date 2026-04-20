@@ -8,6 +8,12 @@ const EndpointSchema = new Schema(
       trim: true,
     },
 
+    ownerId: {
+      type: String,
+      required: true,
+      index: true
+    },
+
     projectId: {
       type: Schema.Types.ObjectId,
       ref: "Project",
@@ -46,7 +52,7 @@ const EndpointSchema = new Schema(
       type: Number,
       default: 0,
       min: 0,
-    },
+    }
   },
   {
     timestamps: true,

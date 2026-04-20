@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import EndpointForm from "./EndpointForm";
 import JsonPreview from "./JsonPreview";
 import { set } from "mongoose";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-const PROJECT_ID = "69bbd7e8257df51484ad3002";
+//const PROJECT_ID = "69bbd7e8257df51484ad3002";
 
 type EndpointEditorProps = {
   endpointId?: string;
@@ -22,6 +23,8 @@ type EndpointFromApi = {
 };
 
 export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get("projectId") ?? "";
   const [method, setMethod] = useState<HttpMethod>("GET");
   const [path, setPath] = useState("/users");
   const [responseBody, setResponseBody] = useState(`{
@@ -69,6 +72,11 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
     setError("");
     setSuccess("");
 
+    if (!projectId) {
+      setError("ProjectId saknas i URL");
+      return;
+    }
+
     if (!path.trim()) {
       setError("Path maste fyllas i.");
       return;
@@ -102,7 +110,7 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
         body: JSON.stringify({
 
           name: endpointName,
-          projectId: PROJECT_ID,
+          projectId,
           method,
           path,
           requestBody: null,
@@ -133,7 +141,7 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
 
     previewData = {
       name: `${method} ${path}`,
-      projectId: PROJECT_ID,
+      projectId,
       method,
       path,
       requestBody: null,
@@ -144,7 +152,7 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
   } catch {
     previewData = {
       name: `${method} ${path}`,
-      projectId: PROJECT_ID,
+      projectId,
       method,
       path,
       requestBody: null,
