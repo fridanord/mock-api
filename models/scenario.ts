@@ -2,6 +2,19 @@ import { Schema, model, models } from "mongoose";
 
 const ScenarioSchema = new Schema(
   {
+    ownerId: {
+      type: String,
+      required: [true, "Scenario måste tillhöra en användare"],
+      index: true,
+    },
+
+    projectId: {
+      type: Schema.Types.ObjectId,
+      ref: "Project",
+      required: [true, "Scenario måste tillhöra ett projekt"],
+      index: true,
+    },
+
     endpointId: {
       type: Schema.Types.ObjectId,
       ref: "Endpoint",
@@ -18,6 +31,7 @@ const ScenarioSchema = new Schema(
     statusCode: {
       type: Number,
       required: [true, "Statuskod måste anges"],
+      default: 200,
     },
 
     responseBody: {
@@ -44,13 +58,17 @@ const ScenarioSchema = new Schema(
       type: Boolean,
       default: false,
     },
+
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const Scenario =
-  models.Scenario || model("Scenario", ScenarioSchema);
+const Scenario = models.Scenario || model("Scenario", ScenarioSchema);
 
 export default Scenario;

@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import Endpoint from "@/models/endpoint";
 import Project from "@/models/Project";
-import Scenario from "@/models/Scenario";
+import Scenario from "@/models/scenario";
 import { connectDB } from "@/lib/mongoose";
 
 export async function GET(request: Request) {

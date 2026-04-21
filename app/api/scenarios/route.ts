@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { connectDB } from "@/lib/mongoose";
-import Scenario from "@/models/Scenario";
+import Scenario from "@/models/scenario";
 import Endpoint from "@/models/endpoint";
 
 export async function POST(req: Request) {
