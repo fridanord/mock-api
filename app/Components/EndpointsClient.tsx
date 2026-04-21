@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import EndpointListContainer, {
   FakeEndpoint,
 } from "@/app/Components/EndpointListContainer";
+import { ArrowLeft } from "lucide-react";
 
 type EndpointFromApi = {
   _id: string;
@@ -30,7 +31,7 @@ export default function EndpointsClient() {
   useEffect(() => {
     const fetchEndpoints = async () => {
       if (!projectId) {
-        setError("ProjectId saknas i URL.");
+        setError("Välj eller skapa ett projekt först. ");
         setIsLoading(false);
         return;
       }
@@ -109,6 +110,7 @@ export default function EndpointsClient() {
       <div className="max-w-5xl flex flex-col gap-6">
         <div>
           <Link href="/start/projects" className="btn-ghost mb-4">
+          <ArrowLeft size={16} />
             Tillbaka
           </Link>
 

@@ -2,14 +2,11 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import EndpointForm from "./EndpointForm";
 import JsonPreview from "./JsonPreview";
-import { set } from "mongoose";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-
-//const PROJECT_ID = "69bbd7e8257df51484ad3002";
 
 type EndpointEditorProps = {
   endpointId?: string;
@@ -23,8 +20,10 @@ type EndpointFromApi = {
 };
 
 export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const projectId = searchParams.get("projectId") ?? "";
+
   const [method, setMethod] = useState<HttpMethod>("GET");
   const [path, setPath] = useState("/users");
   const [responseBody, setResponseBody] = useState(`{
@@ -50,7 +49,10 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
         const res = await fetch(`/api/endpoints/${endpointId}`);
         const data: EndpointFromApi = await res.json();
 
-        if (!res.ok) setError(data._id || "Kunde inte hämta endpoint.");
+        if (!res.ok) {
+          setError(data._id || "Kunde inte hämta endpoint.");
+          return;
+        }
 
         if (cancelled) return;
 
@@ -69,11 +71,13 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
   }, [endpointId]);
 
   const handleSave = async () => {
+    if (isSaving) return;
+
     setError("");
     setSuccess("");
 
     if (!projectId) {
-      setError("ProjectId saknas i URL");
+      setError("Välj eller skapa ett projekt först.");
       return;
     }
 
@@ -108,7 +112,6 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
         method: httpMethod,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-
           name: endpointName,
           projectId,
           method,
@@ -127,6 +130,11 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
       }
 
       setSuccess("Endpoint sparades i databasen.");
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      router.push(`/start/endpoints?projectId=${projectId}`);
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Nagot gick fel.");
     } finally {
@@ -165,7 +173,10 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
       <div className="mx-auto flex max-w-5xl flex-col gap-6">
         <div>
           <p className="mb-3">
-            <Link href="/start/endpoints" className="btn-ghost">
+            <Link
+              href={`/start/endpoints?projectId=${projectId}`}
+              className="btn-ghost"
+            >
               Tillbaka
             </Link>
           </p>
@@ -177,6 +188,7 @@ export default function EndpointEditor({ endpointId }: EndpointEditorProps) {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div className="card-base">
             <EndpointForm
+              projectId={projectId}
               method={method}
               path={path}
               responseBody={responseBody}

@@ -348,6 +348,11 @@
     color: var(--color-invalid);
   }
 
+  .status-warning {
+  @apply bg-yellow-89;
+  color: var(--color-orange-44);
+  }
+
   .method-badge {
     @apply px-1.5 py-0.5 rounded text-[10px] font-bold uppercase;
   }

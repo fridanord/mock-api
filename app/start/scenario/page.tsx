@@ -1,10 +1,12 @@
+import Link from "next/link";
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-//import ScenarioPickerCard from "@/app/Components/ScenarioPickerCard";
 import ScenarioWorkspace from "@/app/Components/ScenarioWorkspace";
 import Endpoint from "@/models/endpoint";
 import { connectDB } from "@/lib/mongoose";
+import { Loader2, ArrowLeft } from "lucide-react";
+import Project from "@/models/Project";
 
 type ScenarioPageProps = {
   searchParams: Promise<{
@@ -49,6 +51,11 @@ export default async function ScenarioPage({
 
   await connectDB();
 
+  const project = await Project.findOne({
+    _id: projectId,
+    ownerId: userId,
+  }).lean();
+
   const data = await Endpoint.find({
     ownerId: userId,
     projectId,
@@ -61,10 +68,19 @@ export default async function ScenarioPage({
     id: endpoint._id,
   }));
 
+  const safeProjectName = project ? JSON.parse(JSON.stringify(project)).name : "Okänt projekt";
+
   return (
     <div className="h-full w-full overflow-y-auto p-8">
       <div className="max-w-5xl flex flex-col gap-6">
         <div>
+          <Link
+            href={`/start/endpoints?projectId=${projectId}`}
+            className="btn-ghost mb-4 inline-flex"
+          ><ArrowLeft size={16} />
+            Tillbaka
+          </Link>
+
           <h1 className="text-azure-11 text-3xl font-bold">Scenario</h1>
           <p className="mt-2 text-azure-34">
             Bygg och testa olika API-scenarion.
@@ -82,12 +98,15 @@ export default async function ScenarioPage({
           {endpoints && endpoints.length > 0 ? (
             <ScenarioWorkspace
               projectId={projectId}
+              projectName={safeProjectName}
               endpoints={endpoints}
               initialEndpointId={endpointId}
             />
           ) : (
             <div className="text-center p-12 border-2 border-dashed border-grey-91 rounded-3xl">
-              <h2 className="text-azure-11 font-semibold">Inga endpoints hittades</h2>
+              <h2 className="text-azure-11 font-semibold">
+                Inga endpoints hittades
+              </h2>
               <p className="text-azure-34 mt-2">
                 Skapa en endpoint först för att kunna hantera scenarion.
               </p>
