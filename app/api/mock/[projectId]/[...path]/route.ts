@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Endpoint from "@/models/endpoint";
-import { connectDB } from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongoose";
+import Scenario from "@/models/scenario";
 
 type RouteContext = {
   params: {
@@ -31,10 +32,21 @@ async function handleMockRequest(
       );
     }
 
+    const activeScenario = await Scenario.findOne({
+      endpointId: endpoint._id,
+      isActive: true
+    });
+
+    if (activeScenario) {
+      return NextResponse.json(
+        activeScenario.responseBody,
+        { status: activeScenario.statusCode }
+      );
+    }
+
     return NextResponse.json(endpoint.responseBody, { status: 200 });
   } catch (error) {
     console.error("Mock handler error:", error);
-
     return NextResponse.json(
       { message: "Kunde inte hämta mock-svar." },
       { status: 500 }
@@ -44,7 +56,8 @@ async function handleMockRequest(
 
 export async function GET(
   _request: NextRequest,
-  { params }: RouteContext
+  context: { params: Promise<RouteContext["params"]> }
 ) {
-  return handleMockRequest("GET", params);
+  const resolvedParams = await context.params;
+  return handleMockRequest("GET", resolvedParams);
 }

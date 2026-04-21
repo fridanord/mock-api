@@ -1,61 +1,120 @@
+import Link from "next/link";
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import ScenarioWorkspace from "@/app/Components/ScenarioWorkspace";
+import Endpoint from "@/models/endpoint";
+import { connectDB } from "@/lib/mongoose";
+import { Loader2, ArrowLeft } from "lucide-react";
+import Project from "@/models/Project";
 
+type ScenarioPageProps = {
+  searchParams: Promise<{
+    projectId?: string;
+    endpointId?: string;
+  }>;
+};
 
-
-import type { EndpointSummary } from "@/app/Components/Mocktypes/mocktypes";
-import { mockEndpoints } from "@/app/Components/Mocktypes/mockData";
-import ScenarioNewPicker from "@/app/Components/ScenarioPickerCard";
-import ScenarioPickerCard from "@/app/Components/ScenarioPickerCard";
-
-
-export default async function ScenarioPage() {
+export default async function ScenarioPage({
+  searchParams,
+}: ScenarioPageProps) {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (!session?.user) {
     redirect("/start/login");
   }
+
+  const userId = (session.user as { id: string }).id;
+  const { projectId = "", endpointId = "" } = await searchParams;
+
+  if (!projectId) {
+    return (
+      <div className="h-full w-full overflow-y-auto p-8">
+        <div className="max-w-5xl flex flex-col gap-6">
+          <div>
+            <h1 className="text-azure-11 text-3xl font-bold">Scenario</h1>
+            <p className="mt-2 text-azure-34">
+              Bygg och testa olika API-scenarion.
+            </p>
+          </div>
+
+          <div className="text-center p-12 border-2 border-dashed border-grey-91 rounded-3xl">
+            <h2 className="text-azure-11 font-semibold">ProjectId saknas</h2>
+            <p className="text-azure-34 mt-2">
+              Gå tillbaka till projektlistan och öppna ett projekt först.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  await connectDB();
+
+  const project = await Project.findOne({
+    _id: projectId,
+    ownerId: userId,
+  }).lean();
+
+  const data = await Endpoint.find({
+    ownerId: userId,
+    projectId,
+  })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  const endpoints = JSON.parse(JSON.stringify(data)).map((endpoint: any) => ({
+    ...endpoint,
+    id: endpoint._id,
+  }));
+
+  const safeProjectName = project ? JSON.parse(JSON.stringify(project)).name : "Okänt projekt";
+
   return (
     <div className="h-full w-full overflow-y-auto p-8">
       <div className="max-w-5xl flex flex-col gap-6">
-
-        {/* Header */}
         <div>
-          <h1 className="text-azure-11">Scenario</h1>
+          <Link
+            href={`/start/endpoints?projectId=${projectId}`}
+            className="btn-ghost mb-4 inline-flex"
+          ><ArrowLeft size={16} />
+            Tillbaka
+          </Link>
+
+          <h1 className="text-azure-11 text-3xl font-bold">Scenario</h1>
           <p className="mt-2 text-azure-34">
             Bygg och testa olika API-scenarion.
           </p>
         </div>
 
-        {/* Info */}
-        <div className="info-box">
-          <span>ℹ️</span>
-          <p>
+        <div className="flex items-start gap-3 rounded-2xl bg-blue-50/30 p-4 border border-blue-100">
+          <span className="text-xl">ℹ️</span>
+          <p className="text-sm text-azure-65">
             Här kommer du kunna kombinera endpoints och simulera flöden.
           </p>
         </div>
 
-        {/* Placeholder card */}
-        {/* <div className="card-base p-8 flex flex-col items-center justify-center text-center gap-4">
-          <h2 className="text-azure-11">Inga scenarion ännu</h2>
-          <p className="text-azure-34 max-w-md">
-            Skapa ditt första scenario för att börja testa API-flöden mellan endpoints.
-          </p>
-
-          <button className="btn-primary">
-            + Skapa scenario
-          </button>
-        </div> */}
-
-
-        <div className="flex justify-center py-8">
-          <ScenarioPickerCard endpoints={mockEndpoints as EndpointSummary[]} />
+        <div className="py-8">
+          {endpoints && endpoints.length > 0 ? (
+            <ScenarioWorkspace
+              projectId={projectId}
+              projectName={safeProjectName}
+              endpoints={endpoints}
+              initialEndpointId={endpointId}
+            />
+          ) : (
+            <div className="text-center p-12 border-2 border-dashed border-grey-91 rounded-3xl">
+              <h2 className="text-azure-11 font-semibold">
+                Inga endpoints hittades
+              </h2>
+              <p className="text-azure-34 mt-2">
+                Skapa en endpoint först för att kunna hantera scenarion.
+              </p>
+            </div>
+          )}
         </div>
 
-
-        {/* Footer hint */}
-        <div className="card-footer">
+        <div className="text-center text-xs text-azure-65 mt-4">
           Scenario används för att simulera riktiga API-anrop i kedjor.
         </div>
       </div>

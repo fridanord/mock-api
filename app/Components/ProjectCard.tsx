@@ -68,8 +68,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
             <div className="flex gap-3">
                 {/* Den här länken kommer behöva peka på `/start/projects/${project._id}`, just nu pekar den bara på den mockade prototypen för att visa flödet*/}
-                <Link href="/start/endpoints" className="btn-primary">
-                  Öppna
+                <Link href={`/start/endpoints?projectId=${project._id}`} className="btn-primary">
+                   Öppna
                 </Link>
 
                 <EndpointEditButton

@@ -5,6 +5,7 @@ import Link from "next/link";
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 type EndpointFormProps = {
+  projectId: string;
   method: HttpMethod;
   path: string;
   responseBody: string;
@@ -18,6 +19,7 @@ type EndpointFormProps = {
 };
 
 export default function EndpointForm({
+  projectId,
   method,
   path,
   responseBody,
@@ -40,7 +42,10 @@ export default function EndpointForm({
         </div>
 
         <div className="flex gap-3">
-          <Link href="/start/endpoints" className="btn-secondary">
+          <Link
+            href={`/start/endpoints?projectId=${projectId}`}
+            className="btn-secondary"
+          >
             Avbryt
           </Link>
 

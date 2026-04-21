@@ -1,12 +1,12 @@
 "use client";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import EndpointListContainer, {
   FakeEndpoint,
 } from "@/app/Components/EndpointListContainer";
-
-const PROJECT_ID = "69bbd7e8257df51484ad3002";
+import { ArrowLeft } from "lucide-react";
 
 type EndpointFromApi = {
   _id: string;
@@ -20,29 +20,55 @@ type EndpointFromApi = {
   listCount?: number;
 };
 
+type ProjectFromApi = {
+  _id: string;
+  name: string;
+  apiKey?: string;
+};
+
 export default function EndpointsClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get("projectId") ?? "";
+
+  const [projectName, setProjectName] = useState("");
+  const [projectApiKey, setProjectApiKey] = useState("");
   const [endpoints, setEndpoints] = useState<FakeEndpoint[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchEndpoints = async () => {
+    const fetchProjectAndEndpoints = async () => {
+      if (!projectId) {
+        setError("Välj eller skapa ett projekt först.");
+        setIsLoading(false);
+        return;
+      }
+
       try {
         setIsLoading(true);
         setError("");
 
-        const response = await fetch(
-          `/api/endpoints?projectId=${PROJECT_ID}`
-        );
+        const [projectResponse, endpointsResponse] = await Promise.all([
+          fetch(`/api/projects/${projectId}`),
+          fetch(`/api/endpoints?projectId=${projectId}`),
+        ]);
 
-        const data: EndpointFromApi[] = await response.json();
+        const projectData: ProjectFromApi = await projectResponse.json();
+        const endpointsData: EndpointFromApi[] = await endpointsResponse.json();
 
-        if (!response.ok) {
-          throw new Error("Kunde inte hamta endpoints.");
+        if (!projectResponse.ok) {
+          throw new Error(projectData?.name || "Kunde inte hämta projekt.");
         }
 
-        const mappedEndpoints: FakeEndpoint[] = data.map((endpoint) => ({
+        if (!endpointsResponse.ok) {
+          throw new Error("Kunde inte hämta endpoints.");
+        }
+
+        setProjectName(projectData.name ?? "");
+        setProjectApiKey(projectData.apiKey ?? "");
+
+        const mappedEndpoints: FakeEndpoint[] = endpointsData.map((endpoint) => ({
           id: endpoint._id,
           method: endpoint.method,
           path: endpoint.path,
@@ -55,15 +81,15 @@ export default function EndpointsClient() {
         setEndpoints(mappedEndpoints);
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Nagot gick fel vid hamtning."
+          err instanceof Error ? err.message : "Något gick fel vid hämtning."
         );
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchEndpoints();
-  }, []);
+    fetchProjectAndEndpoints();
+  }, [projectId]);
 
   const handleDelete = async (endpoint: FakeEndpoint) => {
     const confirmed = window.confirm(
@@ -92,8 +118,20 @@ export default function EndpointsClient() {
       );
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Nagot gick fel vid radering."
+        err instanceof Error ? err.message : "Något gick fel vid radering."
       );
+    }
+  };
+
+  const baseUrl = projectApiKey
+    ? `https://mockdata.example/mock/${projectApiKey}`
+    : "Base URL saknas";
+
+  const handleCopyBaseUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(baseUrl);
+    } catch {
+      setError("Kunde inte kopiera Base URL.");
     }
   };
 
@@ -102,21 +140,29 @@ export default function EndpointsClient() {
       <div className="max-w-5xl flex flex-col gap-6">
         <div>
           <Link href="/start/projects" className="btn-ghost mb-4">
+            <ArrowLeft size={16} />
             Tillbaka
           </Link>
 
-          <h1 className="text-azure-11">Projekt: Webshop API</h1>
-          <p className="mt-2 text-azure-34">
-            Base URL (ide): https://mockdata.example/mock/p_6546ae33703058
-          </p>
+          <h1 className="text-azure-11">
+            Projekt: {projectName || "Laddar projekt..."}
+          </h1>
+          <p className="mt-2 text-azure-34">Base URL (idé): {baseUrl}</p>
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <button type="button" className="btn-secondary">
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={handleCopyBaseUrl}
+          >
             Kopiera Base URL
           </button>
 
-          <Link href="/start/endpoints/edit" className="btn-primary">
+          <Link
+            href={`/start/endpoints/edit?projectId=${projectId}`}
+            className="btn-primary"
+          >
             + Skapa endpoint
           </Link>
         </div>
@@ -138,7 +184,7 @@ export default function EndpointsClient() {
         {!isLoading && !error && endpoints.length === 0 && (
           <div className="card-base p-6">
             <p className="text-azure-34">
-              Inga endpoints hittades for detta projekt an.
+              Inga endpoints hittades för detta projekt än.
             </p>
           </div>
         )}
@@ -147,13 +193,16 @@ export default function EndpointsClient() {
           <EndpointListContainer
             endpoints={endpoints}
             onEdit={(endpoint) =>
-              router.push(`/start/endpoints/${endpoint.id}/edit`)
+              router.push(
+                `/start/endpoints/${endpoint.id}/edit?projectId=${projectId}`
+              )
             }
             onTest={(endpoint) => {
-              console.log("Test endpoint:", endpoint);
+              router.push(
+                `/start/scenario?projectId=${projectId}&endpointId=${endpoint.id}`
+              );
             }}
             onDelete={(endpoint) => {
-              console.log("Deleted endpoint:", endpoint);
               handleDelete(endpoint);
             }}
           />
