@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Endpoint from "@/models/endpoint";
 import { connectDB } from "@/lib/mongoose";
-import Scenario from "@/models/Scenario";
+import Scenario from "@/models/scenario";
 
 type RouteContext = {
   params: {
