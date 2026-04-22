@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongoose";
 import Project from "@/models/Project";
+import Endpoint from "@/models/endpoint";
 
 /* GET -> Hämtar alla projekt för en specifik användare, ex: /api/projects?owner=123 */
 export async function GET(request: Request) {
@@ -15,7 +16,21 @@ export async function GET(request: Request) {
         }
 
         const projects = await Project.find({ ownerId }).sort({ createdAt: -1 });
-        return NextResponse.json(projects);
+
+        const projectsWithCounts = await Promise.all(
+            projects.map(async (project) => {
+                const endpointCount = await Endpoint.countDocuments({
+                    projectId: project._id,
+                });
+
+                return {
+                    ...project.toObject(),
+                    endpointCount,
+                };
+            })
+        );
+
+        return NextResponse.json(projectsWithCounts);
     } catch (error) {
         console.error("Database Error:", error);
         return NextResponse.json({ message: "Internt serverfel" }, { status: 500 });
