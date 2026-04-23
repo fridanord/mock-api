@@ -1,5 +1,5 @@
-﻿import Hero from "../Components/Hero";
-import InfoSection from "../Components/InfoSection";
+﻿import Hero from "../components/Hero";
+import InfoSection from "../components/InfoSection";
 
 export default function StartPage() {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
-import Navbar from "../Components/Navbar";
-import LayoutAccordion from "../Components/LayoutAccordion";
+import Navbar from "../components/Navbar";
+import LayoutAccordion from "../components/LayoutAccordion";
 
 export default function StartLayout({
   children,
