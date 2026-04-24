@@ -32,8 +32,8 @@ export default function EndpointForm({
   onSave,
 }: EndpointFormProps) {
   return (
-    <div className="p-8">
-      <div className="mb-6 flex items-start justify-between gap-4">
+    <div className="p-8 @container">
+      <div className="mb-6 flex flex-col gap-4 @lg:flex-row @lg:items-start @lg:justify-between">
         <div>
           <h2 className="text-azure-11">Grundinstallningar</h2>
           <p className="mt-2 text-azure-34">
