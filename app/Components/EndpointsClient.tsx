@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import EndpointListContainer, {
   FakeEndpoint,
 } from "@/app/Components/EndpointListContainer";
+import DeleteModal from "@/app/Components/DeleteModal";
 import { ArrowLeft } from "lucide-react";
 
 type EndpointFromApi = {
@@ -34,6 +35,8 @@ export default function EndpointsClient() {
   const [projectName, setProjectName] = useState("");
   const [projectApiKey, setProjectApiKey] = useState("");
   const [endpoints, setEndpoints] = useState<FakeEndpoint[]>([]);
+  const [endpointToDelete, setEndpointToDelete] =
+    useState<FakeEndpoint | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -92,14 +95,6 @@ export default function EndpointsClient() {
   }, [projectId]);
 
   const handleDelete = async (endpoint: FakeEndpoint) => {
-    const confirmed = window.confirm(
-      `Vill du radera endpointen ${endpoint.method} ${endpoint.path}?`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
     try {
       setError("");
 
@@ -116,6 +111,8 @@ export default function EndpointsClient() {
       setEndpoints((current) =>
         current.filter((item) => item.id !== endpoint.id)
       );
+
+      setEndpointToDelete(null);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Något gick fel vid radering."
@@ -203,11 +200,27 @@ export default function EndpointsClient() {
               );
             }}
             onDelete={(endpoint) => {
-              handleDelete(endpoint);
+              setEndpointToDelete(endpoint);
             }}
           />
         )}
       </div>
+
+      <DeleteModal
+        isOpen={!!endpointToDelete}
+        onClose={() => setEndpointToDelete(null)}
+        onConfirm={() => {
+          if (endpointToDelete) {
+            handleDelete(endpointToDelete);
+          }
+        }}
+        title="Radera endpoint?"
+        description={`Är du säker på att du vill radera "${
+          endpointToDelete
+            ? `${endpointToDelete.method} ${endpointToDelete.path}`
+            : "denna endpoint"
+        }"? Detta går inte att ångra.`}
+      />
     </div>
   );
 }
