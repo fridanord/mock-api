@@ -1,6 +1,6 @@
 ﻿import Hero from "../components/Hero";
 import InfoSection from "../components/InfoSection";
-import StartPageDraft from "../components/StartPageDraft";
+import StartPageDraft from "../components/StartPageDraft/StartPageDraft";
 
 export default function StartPage() {
   return (
