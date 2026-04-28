@@ -1,3 +1,5 @@
+"use client";
+
 import { FolderOpen, Code2, Play } from "lucide-react";
 import IconBox from "./IconBox";
 
@@ -5,22 +7,35 @@ type LoggedInStartProps = {
   userName: string;
 };
 
+// Funktion = hälsning baserat på tid
+function getGreeting() {
+  const hour = new Date().getHours();
+
+  if (hour < 10) return "God morgon";
+  if (hour < 17) return "God dag";
+  if (hour < 22) return "God kväll";
+  return "God natt";
+}
+
 export default function LoggedInStart({ userName }: LoggedInStartProps) {
+  const greeting = getGreeting();
+
   return (
     <div className="space-y-6">
+      {/* HERO */}
       <section className="card-base">
         <div className="p-8 md:p-10">
           <p className="text-sm uppercase tracking-widest text-[var(--color-text-muted)]">
             Mockdata.API
           </p>
 
+          {/* Dynamisk hälsning */}
           <h1 className="mt-4 max-w-2xl text-4xl font-semibold tracking-tight text-[var(--color-text-main)]">
-            Välkommen tillbaka!
+            {greeting}, {userName}!
           </h1>
 
           <p className="mt-4 max-w-xl text-base leading-7 text-[var(--color-text-muted)]">
-            Du är inloggad som <span className="font-semibold">{userName}</span>
-            . Här kan du fortsätta arbeta med dina projekt och endpoints.
+            Här kan du fortsätta arbeta med dina projekt och endpoints.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
@@ -28,13 +43,14 @@ export default function LoggedInStart({ userName }: LoggedInStartProps) {
               Mina projekt
             </a>
 
-            <a href="/start/endpoints" className="btn-secondary">
+            {/* <a href="/start/endpoints" className="btn-secondary">
               Mina endpoints
-            </a>
+            </a> */}
           </div>
         </div>
       </section>
 
+      {/* QUICK CARDS */}
       <section className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <QuickCard
           icon={<FolderOpen className="h-5 w-5" />}
@@ -61,6 +77,7 @@ export default function LoggedInStart({ userName }: LoggedInStartProps) {
   );
 }
 
+// Återanvändbar card-komponent
 function QuickCard({
   icon,
   color,
