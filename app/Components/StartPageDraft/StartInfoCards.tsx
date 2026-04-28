@@ -12,7 +12,7 @@ export default function StartInfoCards() {
               <Rocket className="h-5 w-5" />
             </IconBox>
 
-            <h2 className="text-xl font-semibold text-slate-950">
+            <h2 className="text-xl font-semibold text-[var(--color-text-main)]">
               Kom igång snabbt
             </h2>
           </div>
@@ -52,28 +52,31 @@ export default function StartInfoCards() {
       <article className="card-base">
         <div className="p-6 md:p-8">
           <div className="flex items-center gap-3">
-            <IconBox color="bg-slate-100 text-slate-700">
+            <IconBox color="bg-[var(--color-surface-muted)] text-[var(--color-text-main)]">
               <Code2 className="h-5 w-5" />
             </IconBox>
 
-            <h2 className="text-xl font-semibold text-slate-950">Exempel</h2>
+            <h2 className="text-xl font-semibold text-[var(--color-text-main)]">
+              Exempel
+            </h2>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 font-mono text-sm text-slate-900">
-            <p className="text-slate-400">Request</p>
+          <div className="mt-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-5 font-mono text-sm text-[var(--color-text-main)]">
+            <p className="text-[var(--color-text-muted)]">Request</p>
             <p className="mt-2">GET /users</p>
 
-            <p className="mt-5 text-slate-400">Svar</p>
+            <p className="mt-5 text-[var(--color-text-muted)]">Svar</p>
             <p className="mt-2">
-              <span className="text-emerald-600">200</span>: [&#123;...&#125;]
-              <span className="px-3 text-slate-400">/</span>
-              <span className="text-rose-600">500</span>: &#123; error: true
-              &#125;
+              <span className="text-[var(--color-valid)]">200</span>:
+              [&#123;...&#125;]
+              <span className="px-3 text-[var(--color-text-muted)]">/</span>
+              <span className="text-[var(--color-invalid)]">500</span>: &#123;
+              error: true &#125;
             </p>
           </div>
 
-          <div className="mt-5 flex items-center gap-3 rounded-2xl bg-blue-50 p-4 text-sm text-slate-700">
-            <Info className="h-5 w-5 text-blue-600" />
+          <div className="mt-5 flex items-center gap-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-grey-97)] p-4 text-sm text-[var(--color-text-main)]">
+            <Info className="h-5 w-5 text-[var(--color-blue-59)]" />
             <p>
               <span className="font-semibold">Tips:</span> Använd mock-URL:en
               direkt i din <code>fetch()</code>.
@@ -101,8 +104,8 @@ function Step({
       <IconBox color={color}>{icon}</IconBox>
 
       <div>
-        <p className="font-semibold text-slate-950">{title}</p>
-        <p className="mt-1 text-sm text-slate-500">{text}</p>
+        <p className="font-semibold text-[var(--color-text-main)]">{title}</p>
+        <p className="mt-1 text-sm text-[var(--color-text-muted)]">{text}</p>
       </div>
     </div>
   );

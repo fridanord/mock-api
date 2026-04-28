@@ -45,10 +45,10 @@ export default function AuthModal({
         <div className="card-base shadow-[0_20px_60px_rgba(0,0,0,0.20)]">
           <div className="flex items-center justify-between px-6 py-5">
             <div>
-              <div className="text-xs uppercase tracking-widest text-azure-65">
+              <div className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">
                 Mockdata.API
               </div>
-              <div className="mt-1 text-xl font-semibold tracking-tight text-azure-11">
+              <div className="mt-1 text-xl font-semibold tracking-tight text-[var(--color-text-main)]">
                 {title}
               </div>
             </div>

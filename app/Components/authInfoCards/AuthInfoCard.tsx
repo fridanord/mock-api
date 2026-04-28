@@ -21,7 +21,7 @@ export default function AuthInfoCard({
     <button
       type="button"
       onClick={onClick}
-      className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:bg-slate-50 hover:shadow-md"
+      className="w-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 text-left shadow-sm transition hover:bg-[var(--color-surface-muted)] hover:shadow-md"
     >
       <div className="flex items-start gap-4">
         <div
@@ -31,13 +31,19 @@ export default function AuthInfoCard({
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-950">{title}</h2>
-          <p className="mt-1 text-sm text-slate-500">Klicka för att läsa mer</p>
+          <h2 className="text-xl font-semibold text-[var(--color-text-main)]">
+            {title}
+          </h2>
+          <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+            Klicka för att läsa mer
+          </p>
         </div>
       </div>
 
       {isOpen && (
-        <p className="mt-4 text-sm leading-6 text-slate-600">{text}</p>
+        <p className="mt-4 text-sm leading-6 text-[var(--color-text-muted)]">
+          {text}
+        </p>
       )}
     </button>
   );

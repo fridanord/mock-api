@@ -1,22 +1,22 @@
-import { Code2, Braces, Play } from "lucide-react";
+import { LogIn, UserPlus, FolderLock } from "lucide-react";
 
 export const authInfoCards = [
   {
-    title: "Bygg endpoints",
-    text: "Skapa egna endpoints med metod och path, till exempel GET /users.",
-    icon: Code2,
+    title: "Logga in",
+    text: "Logga in för att fortsätta där du slutade. Du får tillgång till dina sparade projekt, endpoints och inställningar direkt.",
+    icon: LogIn,
     color: "bg-blue-100 text-blue-600",
   },
   {
-    title: "Skriv JSON-svar",
-    text: "Bestäm vad din endpoint ska svara med när det går bra eller när ett fel ska simuleras.",
-    icon: Braces,
+    title: "Skapa konto",
+    text: "Har du inget konto ännu? Skapa ett gratis konto för att börja bygga och spara dina egna endpoints och JSON-svar.",
+    icon: UserPlus,
     color: "bg-green-100 text-green-600",
   },
   {
-    title: "Testa med fetch()",
-    text: "Kopiera din mock-URL och använd den direkt i din JavaScript-kod.",
-    icon: Play,
+    title: "Allt sparas säkert",
+    text: "Dina projekt och endpoints kopplas till ditt konto så att du alltid kan komma tillbaka och fortsätta arbeta – oavsett enhet.",
+    icon: FolderLock,
     color: "bg-purple-100 text-purple-600",
   },
 ];
