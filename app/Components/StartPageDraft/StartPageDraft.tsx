@@ -4,16 +4,18 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import LogRegComponent from "../LogRegComponent";
 import AuthModal from "./AuthModal";
-import StartHero from "./StartHero";
-import StartInfoCards from "./StartInfoCards";
+import LoggedOutStart from "./LoggedOutStart";
+import LoggedInStart from "./LoggedInStart";
 
 type AuthMode = "login" | "register";
 
 export default function StartPageDraft() {
   const { data: session } = useSession();
+
   const [modalOpen, setModalOpen] = React.useState(false);
   const [mode, setMode] = React.useState<AuthMode>("login");
 
+  // Stäng modal automatiskt när användaren loggar in!
   React.useEffect(() => {
     if (session?.user) {
       setModalOpen(false);
@@ -30,12 +32,17 @@ export default function StartPageDraft() {
     setModalOpen(false);
   };
 
+  const userName = session?.user?.name ?? session?.user?.email ?? "användare";
+
+  // Om användaren är inloggad → visa LoggedInStart
+  // annars → visa LoggedOutStart
   return (
     <>
-      <div className="space-y-6">
-        <StartHero session={session} onAuthClick={handleAuthClick} />
-        <StartInfoCards />
-      </div>
+      {session?.user ? (
+        <LoggedInStart userName={userName} />
+      ) : (
+        <LoggedOutStart onAuthClick={handleAuthClick} />
+      )}
 
       <AuthModal
         open={modalOpen}
