@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import EndpointListContainer, {
   FakeEndpoint,
-} from "@/app/Components/EndpointListContainer";
-import DeleteModal from "@/app/Components/DeleteModal";
+} from "@/app/components/EndpointListContainer";
+import DeleteModal from "@/app/components/DeleteModal";
 import { ArrowLeft } from "lucide-react";
 
 type EndpointFromApi = {
@@ -33,12 +33,18 @@ export default function EndpointsClient() {
   const projectId = searchParams.get("projectId") ?? "";
 
   const [projectName, setProjectName] = useState("");
-  const [projectApiKey, setProjectApiKey] = useState("");
+  // const [projectApiKey, setProjectApiKey] = useState("");  // Ändrade till projektId!
+  const [origin, setOrigin] = useState("");
   const [endpoints, setEndpoints] = useState<FakeEndpoint[]>([]);
-  const [endpointToDelete, setEndpointToDelete] =
-    useState<FakeEndpoint | null>(null);
+  const [endpointToDelete, setEndpointToDelete] = useState<FakeEndpoint | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
 
   useEffect(() => {
     const fetchProjectAndEndpoints = async () => {
@@ -69,22 +75,24 @@ export default function EndpointsClient() {
         }
 
         setProjectName(projectData.name ?? "");
-        setProjectApiKey(projectData.apiKey ?? "");
+        // setProjectApiKey(projectData.apiKey ?? "");  // Ändrade till projektId!
 
-        const mappedEndpoints: FakeEndpoint[] = endpointsData.map((endpoint) => ({
-          id: endpoint._id,
-          method: endpoint.method,
-          path: endpoint.path,
-          countLabel:
-            endpoint.generateList && endpoint.listCount
-              ? `lista ×${endpoint.listCount}`
-              : undefined,
-        }));
+        const mappedEndpoints: FakeEndpoint[] = endpointsData.map(
+          (endpoint) => ({
+            id: endpoint._id,
+            method: endpoint.method,
+            path: endpoint.path,
+            countLabel:
+              endpoint.generateList && endpoint.listCount
+                ? `lista ×${endpoint.listCount}`
+                : undefined,
+          }),
+        );
 
         setEndpoints(mappedEndpoints);
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Något gick fel vid hämtning."
+          err instanceof Error ? err.message : "Något gick fel vid hämtning.",
         );
       } finally {
         setIsLoading(false);
@@ -109,20 +117,19 @@ export default function EndpointsClient() {
       }
 
       setEndpoints((current) =>
-        current.filter((item) => item.id !== endpoint.id)
+        current.filter((item) => item.id !== endpoint.id),
       );
 
       setEndpointToDelete(null);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Något gick fel vid radering."
+        err instanceof Error ? err.message : "Något gick fel vid radering.",
       );
     }
   };
 
-  const baseUrl = projectApiKey
-    ? `https://mockdata.example/mock/${projectApiKey}`
-    : "Base URL saknas";
+  const baseUrl =
+    projectId && origin ? `${origin}/mock/${projectId}` : "Base URL saknas";
 
   const handleCopyBaseUrl = async () => {
     try {
@@ -144,7 +151,7 @@ export default function EndpointsClient() {
           <h1 className="text-azure-11">
             Projekt: {projectName || "Laddar projekt..."}
           </h1>
-          <p className="mt-2 text-azure-34">Base URL (idé): {baseUrl}</p>
+          <p className="mt-2 text-azure-34">Base URL: {baseUrl}</p>
         </div>
 
         <div className="flex flex-wrap gap-3">
@@ -191,12 +198,12 @@ export default function EndpointsClient() {
             endpoints={endpoints}
             onEdit={(endpoint) =>
               router.push(
-                `/start/endpoints/${endpoint.id}/edit?projectId=${projectId}`
+                `/start/endpoints/${endpoint.id}/edit?projectId=${projectId}`,
               )
             }
             onTest={(endpoint) => {
               router.push(
-                `/start/scenario?projectId=${projectId}&endpointId=${endpoint.id}`
+                `/start/scenario?projectId=${projectId}&endpointId=${endpoint.id}`,
               );
             }}
             onDelete={(endpoint) => {
