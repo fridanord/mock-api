@@ -1,6 +1,7 @@
 # Mock API Platform
 
-![Skärmbild på plattformen](/Home.png)
+<img width="1920" height="1564" alt="Homepage" src="https://github.com/user-attachments/assets/21bbfec9-aeff-41b4-bc35-e9ee89c7be4a" />
+
 
 An educational fullstack platform designed for students and developers to master API integration by simulating real-world request and response scenarios. This tool features a secure user management system and an integrated database to allow users to save, test, and monitor API configurations dynamically.
 
